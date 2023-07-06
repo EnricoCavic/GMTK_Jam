@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 773e8c5268f468d49af79f67686cd269, type: 3}
+  m_Name: Teste
+  m_EditorClassIdentifier: 
+  bpm: 140
+  beatsPerSegment: 16
+  clipTracks:
+  - possibleClips:
+    - {fileID: 8300000, guid: 9c77890240f762c42af9db1d63f1fe72, type: 3}
+    - {fileID: 8300000, guid: bed43d6a45e754a4ca9758f08b5aebbf, type: 3}
+    - {fileID: 8300000, guid: 8ad638760216b8141ad68c28b0d42766, type: 3}
+  - possibleClips:
+    - {fileID: 8300000, guid: 36765ac5a11d5e346bb1bf62385afd1a, type: 3}
+    - {fileID: 8300000, guid: 8ba13a23edcfa5044ba853dfd75b0f6a, type: 3}
+  - possibleClips:
+    - {fileID: 8300000, guid: 5d7d79d8fb722344a9c003ade6ba5ede, type: 3}
+    - {fileID: 8300000, guid: 8938380bb3dbe6e42a0124561d5cbba4, type: 3}
