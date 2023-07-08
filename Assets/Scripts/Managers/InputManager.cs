@@ -4,14 +4,14 @@ namespace DPA.Managers
 {
     public class InputManager : Singleton<InputManager>
     {
-        public PlayerActions inputActions;
+        public PlayerActions actions;
 
         private void Awake()
         {
             if (!InstanceSetup(this)) return;
 
-            inputActions = new();
-            inputActions.Enable();
+            actions = new();
+            actions.Enable();
         }
     }
 }
