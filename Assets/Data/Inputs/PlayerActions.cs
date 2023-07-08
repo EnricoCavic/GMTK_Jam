@@ -35,6 +35,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectDelta"",
+                    ""type"": ""Value"",
+                    ""id"": ""06eff162-579a-4c7c-afc8-4e9d43b82aab"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -48,6 +57,17 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""action"": ""Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1836b66a-80b2-45bc-8298-8e82aca33ec9"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectDelta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -57,6 +77,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Select = m_Gameplay.FindAction("Select", throwIfNotFound: true);
+        m_Gameplay_SelectDelta = m_Gameplay.FindAction("SelectDelta", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -119,11 +140,13 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Gameplay;
     private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
     private readonly InputAction m_Gameplay_Select;
+    private readonly InputAction m_Gameplay_SelectDelta;
     public struct GameplayActions
     {
         private @PlayerActions m_Wrapper;
         public GameplayActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Select => m_Wrapper.m_Gameplay_Select;
+        public InputAction @SelectDelta => m_Wrapper.m_Gameplay_SelectDelta;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -136,6 +159,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Select.started += instance.OnSelect;
             @Select.performed += instance.OnSelect;
             @Select.canceled += instance.OnSelect;
+            @SelectDelta.started += instance.OnSelectDelta;
+            @SelectDelta.performed += instance.OnSelectDelta;
+            @SelectDelta.canceled += instance.OnSelectDelta;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -143,6 +169,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Select.started -= instance.OnSelect;
             @Select.performed -= instance.OnSelect;
             @Select.canceled -= instance.OnSelect;
+            @SelectDelta.started -= instance.OnSelectDelta;
+            @SelectDelta.performed -= instance.OnSelectDelta;
+            @SelectDelta.canceled -= instance.OnSelectDelta;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -163,5 +192,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     public interface IGameplayActions
     {
         void OnSelect(InputAction.CallbackContext context);
+        void OnSelectDelta(InputAction.CallbackContext context);
     }
 }
