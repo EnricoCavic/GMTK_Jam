@@ -62,7 +62,7 @@ public class BotNavigator : MonoBehaviour
 
         if (IsNearWall())
         {
-            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1.5f, layerMask);
+            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1.2f, layerMask);
             Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0) * 1.2f, Color.red);
             if (topBlockHit.collider != null)
             {
@@ -88,7 +88,7 @@ public class BotNavigator : MonoBehaviour
 
     private bool IsGrounded()
     {
-        Vector2 boxSize = new Vector2(0.9f, 0.02f);
+        Vector2 boxSize = new Vector2(0.6f, 0.02f);
         groundCheckTempHit = Physics2D.BoxCast(basePosition, boxSize, 0, Vector2.down, Mathf.Infinity, layerMask);
         if (groundCheckTempHit.collider == null) return false;
 
@@ -99,7 +99,7 @@ public class BotNavigator : MonoBehaviour
 
     private bool IsNearWall()
     {
-        Vector2 boxSize = new Vector2(0.02f, 0.9f);
+        Vector2 boxSize = new Vector2(0.02f, 0.6f);
         frontWallTempHit = Physics2D.BoxCast(frontPosition, boxSize, 0, transform.right * sideSwitch, Mathf.Infinity, layerMask);
         if (frontWallTempHit.collider == null) return false;
 
@@ -118,6 +118,8 @@ public class BotNavigator : MonoBehaviour
     public void Walk(float mPlayerSpeed)
     {
         rb.velocity = new Vector2(mPlayerSpeed * sideSwitch, rb.velocity.y);
+
+        //rb.AddForce(new Vector2(mPlayerSpeed * sideSwitch, rb.velocity.y));
     }
 
 
