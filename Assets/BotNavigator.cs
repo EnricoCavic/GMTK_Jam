@@ -19,7 +19,7 @@ public class BotNavigator : MonoBehaviour
 {
     Rigidbody2D rb;    
     BotWalkState currentWalkState;
-    BotJumpState currentJumpState;
+    BotJumpState currentJumpState = BotJumpState.DontJump;
 
     public float playerSpeed;
     //public float maxSpeed = 2;
@@ -29,8 +29,12 @@ public class BotNavigator : MonoBehaviour
     //float maxJumpHeight = 2;
     //float minJumpHeight = 0.01f;
 
+    Vector2 basePosition;
+    Vector2 topPosition;
+    Vector2 frontPosition;
 
-
+    RaycastHit2D groundCheckTempHit;
+    RaycastHit2D frontWallTempHit;
 
     Collider2D botCollider;
     Transform bottomBound;
@@ -49,21 +53,24 @@ public class BotNavigator : MonoBehaviour
 
     void FixedUpdate()
     {
-        var posOnFloor = transform.position - new Vector3(0, botCollider.bounds.extents.y, 0);
+        basePosition = transform.position - new Vector3(0, botCollider.bounds.extents.y, 0);
+        topPosition = transform.position + new Vector3(0, botCollider.bounds.extents.y, 0);
+        frontPosition = transform.position + (new Vector3(botCollider.bounds.extents.x, 0, 0) * sideSwitch);
 
-        #region DOWNCAST
-        RaycastHit2D hit;
-        Vector2 boxCast = new Vector2(0.9f, 0.02f);
+        //if (IsGrounded()) currentJumpState = BotJumpState.Jump;
+        //else currentJumpState = BotJumpState.DontJump;
 
-        hit = Physics2D.BoxCast(posOnFloor, boxCast, 0, Vector2.down, Mathf.Infinity, layerMask);
-
-        if (hit.collider != null)
+        if (IsNearWall())
         {
-            Debug.DrawRay(posOnFloor, Vector2.down * hit.distance, Color.red);
-            //Debug.Log(hit.distance);
-
-            if (hit.distance < 0.01f) currentJumpState = BotJumpState.Jump;
-            else currentJumpState = BotJumpState.DontJump;
+            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1.5f, layerMask);
+            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0) * 1.5f, Color.red);
+            if (topBlockHit.collider != null)
+            {
+                currentJumpState = BotJumpState.DontJump;
+                sideSwitch *= -1;
+            }
+            else if(IsGrounded())
+                currentJumpState = BotJumpState.Jump;
         }
 
         #endregion DOWNCAST
@@ -73,6 +80,25 @@ public class BotNavigator : MonoBehaviour
         if (currentJumpState == BotJumpState.Jump) Jump(jumpSpeed);
     }
 
+    private bool IsGrounded()
+    {
+        Vector2 boxSize = new Vector2(0.9f, 0.02f);
+        groundCheckTempHit = Physics2D.BoxCast(basePosition, boxSize, 0, Vector2.down, Mathf.Infinity, layerMask);
+        if (groundCheckTempHit.collider == null) return false;
+
+        //Debug.Log(hit.distance);
+        Debug.DrawRay(basePosition, Vector2.down * groundCheckTempHit.distance, Color.red);
+        return groundCheckTempHit.distance < 0.01f;
+    }
+
+    private bool IsNearWall()
+    {
+        Vector2 boxSize = new Vector2(0.02f, 0.9f);
+        frontWallTempHit = Physics2D.BoxCast(frontPosition, boxSize, 0, transform.right * sideSwitch, Mathf.Infinity, layerMask);
+        if (frontWallTempHit.collider == null) return false;
+
+        return frontWallTempHit.distance < 0.3f;
+    }
 
     public void Jump(float mJumpSpeed)
     {
