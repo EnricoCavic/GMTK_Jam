@@ -57,9 +57,6 @@ public class BotNavigator : MonoBehaviour
         topPosition = transform.position + new Vector3(0, botCollider.bounds.extents.y, 0);
         frontPosition = transform.position + (new Vector3(botCollider.bounds.extents.x, 0, 0) * sideSwitch);
 
-        //if (IsGrounded()) currentJumpState = BotJumpState.Jump;
-        //else currentJumpState = BotJumpState.DontJump;
-
         if (IsNearWall())
         {
             var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1.5f, layerMask);
@@ -72,9 +69,6 @@ public class BotNavigator : MonoBehaviour
             else if(IsGrounded())
                 currentJumpState = BotJumpState.Jump;
         }
-
-        #endregion DOWNCAST
-
 
         Walk(playerSpeed);
         if (currentJumpState == BotJumpState.Jump) Jump(jumpSpeed);
@@ -107,7 +101,6 @@ public class BotNavigator : MonoBehaviour
 
         Vector2 jump = new Vector2(0, mJumpSpeed);
         rb.AddForce(jump, ForceMode2D.Impulse);
-        
     }
 
     public void Walk(float mPlayerSpeed)
