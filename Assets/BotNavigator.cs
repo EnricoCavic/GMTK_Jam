@@ -17,7 +17,8 @@ public enum BotJumpState
 
 public class BotNavigator : MonoBehaviour
 {
-    Rigidbody2D rb;    
+    Rigidbody2D rb;
+    SpriteRenderer spriteRenderer;
     BotWalkState currentWalkState;
     BotJumpState currentJumpState = BotJumpState.DontJump;
 
@@ -29,7 +30,6 @@ public class BotNavigator : MonoBehaviour
     //float maxJumpHeight = 2;
     //float minJumpHeight = 0.01f;
 
-    Vector2 basePosition;
     Vector2 topPosition;
     Vector2 frontPosition;
 
@@ -43,6 +43,7 @@ public class BotNavigator : MonoBehaviour
     void Awake()
     {
         rb = this.GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         
         int ignoreLayer = LayerMask.NameToLayer("Bot");
         layerMask = 1 << ignoreLayer; 
@@ -53,31 +54,35 @@ public class BotNavigator : MonoBehaviour
 
     void FixedUpdate()
     {
-        basePosition = transform.position - new Vector3(0, botCollider.bounds.extents.y, 0);
-        topPosition = transform.position + new Vector3(0, botCollider.bounds.extents.y, 0);
-        frontPosition = transform.position + (new Vector3(botCollider.bounds.extents.x, 0, 0) * sideSwitch);
+        topPosition = transform.position + new Vector3(0, spriteRenderer.bounds.extents.y * 2, 0);
+        frontPosition = transform.position + new Vector3(spriteRenderer.bounds.extents.x * sideSwitch, spriteRenderer.bounds.extents.y, 0);
 
         bool grounded = IsGrounded();
         currentJumpState = BotJumpState.DontJump;
 
         if (IsNearWall())
         {
-            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1.2f, layerMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0) * 1.2f, Color.red);
+            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 2f, layerMask);
+            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0) * 2f, Color.red);
             if (topBlockHit.collider != null)
             {
                 sideSwitch *= -1;
+                spriteRenderer.flipX = !spriteRenderer.flipX;
             }
             else if(grounded)
+            {
+                Debug.Log("Jump Up Obstacle");
                 currentJumpState = BotJumpState.Jump;
+            }
         }
 
-        if(grounded)
+        if (grounded)
         {
-            var bottomHit = Physics2D.Raycast(transform.position, new Vector2(sideSwitch, -1), 2f, layerMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1) * 1.5f, Color.red);
-            if(bottomHit.collider == null)
+            var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1), 2f, layerMask);
+            Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1) * 2f, Color.red);
+            if (bottomHit.collider == null)
             {
+                Debug.Log("Jump Over Hole");
                 currentJumpState = BotJumpState.Jump;
             }
         }
@@ -89,11 +94,11 @@ public class BotNavigator : MonoBehaviour
     private bool IsGrounded()
     {
         Vector2 boxSize = new Vector2(0.6f, 0.02f);
-        groundCheckTempHit = Physics2D.BoxCast(basePosition, boxSize, 0, Vector2.down, Mathf.Infinity, layerMask);
+        groundCheckTempHit = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, Mathf.Infinity, layerMask);
         if (groundCheckTempHit.collider == null) return false;
 
         //Debug.Log(hit.distance);
-        Debug.DrawRay(basePosition, Vector2.down * groundCheckTempHit.distance, Color.red);
+        Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
         return groundCheckTempHit.distance < 0.01f;
     }
 
@@ -103,7 +108,7 @@ public class BotNavigator : MonoBehaviour
         frontWallTempHit = Physics2D.BoxCast(frontPosition, boxSize, 0, transform.right * sideSwitch, Mathf.Infinity, layerMask);
         if (frontWallTempHit.collider == null) return false;
 
-        return frontWallTempHit.distance < 0.3f;
+        return frontWallTempHit.distance < 1.5f;
     }
 
     public void Jump(float mJumpSpeed)
@@ -118,8 +123,6 @@ public class BotNavigator : MonoBehaviour
     public void Walk(float mPlayerSpeed)
     {
         rb.velocity = new Vector2(mPlayerSpeed * sideSwitch, rb.velocity.y);
-
-        //rb.AddForce(new Vector2(mPlayerSpeed * sideSwitch, rb.velocity.y));
     }
 
 
