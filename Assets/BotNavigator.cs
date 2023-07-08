@@ -57,17 +57,29 @@ public class BotNavigator : MonoBehaviour
         topPosition = transform.position + new Vector3(0, botCollider.bounds.extents.y, 0);
         frontPosition = transform.position + (new Vector3(botCollider.bounds.extents.x, 0, 0) * sideSwitch);
 
+        bool grounded = IsGrounded();
+        currentJumpState = BotJumpState.DontJump;
+
         if (IsNearWall())
         {
             var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1.5f, layerMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0) * 1.5f, Color.red);
+            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0) * 1.2f, Color.red);
             if (topBlockHit.collider != null)
             {
-                currentJumpState = BotJumpState.DontJump;
                 sideSwitch *= -1;
             }
-            else if(IsGrounded())
+            else if(grounded)
                 currentJumpState = BotJumpState.Jump;
+        }
+
+        if(grounded)
+        {
+            var bottomHit = Physics2D.Raycast(transform.position, new Vector2(sideSwitch, -1), 2f, layerMask);
+            Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1) * 1.5f, Color.red);
+            if(bottomHit.collider == null)
+            {
+                currentJumpState = BotJumpState.Jump;
+            }
         }
 
         Walk(playerSpeed);
