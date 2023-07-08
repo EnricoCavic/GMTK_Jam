@@ -51,6 +51,7 @@ public class BotNavigator : MonoBehaviour
     {
         var posOnFloor = transform.position - new Vector3(0, botCollider.bounds.extents.y, 0);
 
+        #region DOWNCAST
         RaycastHit2D hit;
         Vector2 boxCast = new Vector2(0.9f, 0.02f);
 
@@ -65,8 +66,10 @@ public class BotNavigator : MonoBehaviour
             else currentJumpState = BotJumpState.DontJump;
         }
 
-        Walk(playerSpeed);
+        #endregion DOWNCAST
 
+
+        Walk(playerSpeed);
         if (currentJumpState == BotJumpState.Jump) Jump(jumpSpeed);
     }
 
@@ -76,27 +79,14 @@ public class BotNavigator : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         currentJumpState = BotJumpState.DontJump;
 
-        Vector2 jump = new Vector2(0, mJumpSpeed);// * Time.deltaTime;
+        Vector2 jump = new Vector2(0, mJumpSpeed);
         rb.AddForce(jump, ForceMode2D.Impulse);
         
     }
 
     public void Walk(float mPlayerSpeed)
     {
-        //transform.position += new Vector3(mPlayerSpeed * sideSwitch, 0f, 0f) * Time.deltaTime;
-
-        //Vector2 walk = new Vector2(mPlayerSpeed * Time.deltaTime, 0f);
-        //rb.AddForce(walk, ForceMode2D.Impulse);
-
-        //var accelerationMultiplier = 1 - (rb.velocity.magnitude / maxSpeed);
-        //Vector2 walk = new Vector2(mPlayerSpeed * accelerationMultiplier * Time.deltaTime, 0f);
-        //rb.AddRelativeForce(walk * sideSwitch, ForceMode2D.Impulse);
-
         rb.velocity = new Vector2(mPlayerSpeed * sideSwitch, rb.velocity.y);
-        
-
-
-        Debug.Log(rb.velocity);
     }
 
 
