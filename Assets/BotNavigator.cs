@@ -22,11 +22,12 @@ public class BotNavigator : MonoBehaviour
     BotJumpState currentJumpState;
 
     public float playerSpeed;
+    //public float maxSpeed = 2;
     public short sideSwitch = 1;
 
     public float jumpSpeed;
-    float maxJumpHeight = 2;
-    float minJumpHeight = 0.01f;
+    //float maxJumpHeight = 2;
+    //float minJumpHeight = 0.01f;
 
 
 
@@ -34,8 +35,7 @@ public class BotNavigator : MonoBehaviour
     Collider2D botCollider;
     Transform bottomBound;
     int layerMask;
-
-    // Start is called before the first frame update
+    
     void Awake()
     {
         rb = this.GetComponent<Rigidbody2D>();
@@ -45,46 +45,57 @@ public class BotNavigator : MonoBehaviour
         layerMask = ~layerMask;
 
         botCollider = this.GetComponent<Collider2D>();
-        
-
-
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        Walk(playerSpeed);
-        Jump(jumpSpeed);
-
-
         var posOnFloor = transform.position - new Vector3(0, botCollider.bounds.extents.y, 0);
 
         RaycastHit2D hit;
-        hit = Physics2D.Raycast(posOnFloor, Vector2.down, Mathf.Infinity, layerMask);
+        Vector2 boxCast = new Vector2(0.9f, 0.02f);
+
+        hit = Physics2D.BoxCast(posOnFloor, boxCast, 0, Vector2.down, Mathf.Infinity, layerMask);
 
         if (hit.collider != null)
         {
             Debug.DrawRay(posOnFloor, Vector2.down * hit.distance, Color.red);
-            Debug.Log(hit.distance);
-            
-            if(hit.distance > maxJumpHeight)
-            {
-                jumpSpeed = 0;
-            }
+            //Debug.Log(hit.distance);
+
+            if (hit.distance == 0) currentJumpState = BotJumpState.Jump;
+            else currentJumpState = BotJumpState.DontJump;
         }
 
+        Walk(playerSpeed);
+
+        if (currentJumpState == BotJumpState.Jump) Jump(jumpSpeed);
     }
 
 
     public void Jump(float mJumpSpeed)
     {
-        Vector2 jump = new Vector2(0, mJumpSpeed) * Time.deltaTime;
+        currentJumpState = BotJumpState.DontJump;
+
+        Vector2 jump = new Vector2(0, mJumpSpeed);// * Time.deltaTime;
         rb.AddForce(jump, ForceMode2D.Impulse);
+        
     }
 
     public void Walk(float mPlayerSpeed)
     {
-        transform.position += new Vector3(mPlayerSpeed * sideSwitch, 0f, 0f) * Time.deltaTime;
+        //transform.position += new Vector3(mPlayerSpeed * sideSwitch, 0f, 0f) * Time.deltaTime;
+
+        //Vector2 walk = new Vector2(mPlayerSpeed * Time.deltaTime, 0f);
+        //rb.AddForce(walk, ForceMode2D.Impulse);
+
+        //var accelerationMultiplier = 1 - (rb.velocity.magnitude / maxSpeed);
+        //Vector2 walk = new Vector2(mPlayerSpeed * accelerationMultiplier * Time.deltaTime, 0f);
+        //rb.AddRelativeForce(walk * sideSwitch, ForceMode2D.Impulse);
+
+        rb.velocity = new Vector2(mPlayerSpeed * sideSwitch, rb.velocity.y);
+        
+
+
+        Debug.Log(rb.velocity);
     }
 
 
