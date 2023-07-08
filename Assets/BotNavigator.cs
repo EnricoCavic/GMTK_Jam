@@ -61,7 +61,7 @@ public class BotNavigator : MonoBehaviour
             Debug.DrawRay(posOnFloor, Vector2.down * hit.distance, Color.red);
             //Debug.Log(hit.distance);
 
-            if (hit.distance == 0) currentJumpState = BotJumpState.Jump;
+            if (hit.distance < 0.01f) currentJumpState = BotJumpState.Jump;
             else currentJumpState = BotJumpState.DontJump;
         }
 
@@ -73,6 +73,7 @@ public class BotNavigator : MonoBehaviour
 
     public void Jump(float mJumpSpeed)
     {
+        rb.velocity = new Vector2(rb.velocity.x, 0f);
         currentJumpState = BotJumpState.DontJump;
 
         Vector2 jump = new Vector2(0, mJumpSpeed);// * Time.deltaTime;
