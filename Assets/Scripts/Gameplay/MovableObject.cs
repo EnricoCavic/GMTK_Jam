@@ -20,6 +20,12 @@ public class MovableObject : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+    private void Start()
+    {
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+        rb.bodyType = RigidbodyType2D.Static;
+    }
+
     private void Update()
     {
         if (!isSelected) return;
@@ -30,6 +36,8 @@ public class MovableObject : MonoBehaviour
 
     private void OnMouseDown()
     {
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        rb.bodyType = RigidbodyType2D.Dynamic;
         isSelected = true;
     }
 
@@ -40,6 +48,8 @@ public class MovableObject : MonoBehaviour
         Vector2 currentPos = rb.transform.position;
         rb.position = new(Mathf.Round(currentPos.x), Mathf.Round(currentPos.y));
 
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+        rb.bodyType = RigidbodyType2D.Static;
         isSelected = false;
     }
 
