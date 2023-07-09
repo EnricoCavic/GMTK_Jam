@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2605985501821367973
 SpriteRenderer:
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1617203611
-  m_SortingLayer: 1
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 229808639, guid: fa44325c5044c9b46898acbf61c665df, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -137,7 +137,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 1687762985142206102}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 988446fec68ac68438c1de1f044f70ec, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

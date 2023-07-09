@@ -8,7 +8,7 @@ namespace DPA.Managers
 {
     public class ResumePauseHandler : Singleton<ResumePauseHandler>
     {
-        InputManager inputManager;
+        public InputManager inputManager;
         public bool pauseBot = false;
 
         void Awake()
