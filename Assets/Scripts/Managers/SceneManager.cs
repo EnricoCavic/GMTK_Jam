@@ -37,8 +37,9 @@ namespace DPA.Managers
 
         public AsyncOperationHandle<SceneInstance> LoadScene(object _assetKey)
         {
+            /*
             Addressables.UnloadSceneAsync(loadedScene);
-
+            
             var handle = Addressables.LoadSceneAsync(_assetKey, LoadSceneMode.Additive);
             handle.Completed += (operation) =>
             {
@@ -46,8 +47,26 @@ namespace DPA.Managers
                 loadedScene = operation.Result;
                 onLoadSceneCompleted?.Invoke();
             };
+            */
 
-            return handle;
+            
+            var unloadHandle = Addressables.UnloadSceneAsync(loadedScene);
+            unloadHandle.Completed += (unloaded) =>
+            {
+                var handle = Addressables.LoadSceneAsync(_assetKey, LoadSceneMode.Additive);
+                handle.Completed += (operation) =>
+                {
+                    loadedScene = new();
+                    loadedScene = operation.Result;
+                    onLoadSceneCompleted?.Invoke();
+
+                };
+
+            };
+
+            return unloadHandle;
+            
+            // return handle;
         }
 
     }
