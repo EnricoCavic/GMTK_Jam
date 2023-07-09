@@ -150,7 +150,7 @@ TextureImporter:
         x: 34
         y: 160
         width: 13
-        height: 20
+        height: 19
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,13 +165,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Personagem_2
+      name: Personagem_6
       rect:
         serializedVersion: 2
-        x: 16
-        y: 128
-        width: 15
-        height: 20
+        x: 15
+        y: 96
+        width: 17
+        height: 17
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -179,8 +179,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d2b0cc9583f3f294db10e99cb4442465
-      internalID: 325969227
+      spriteID: 73bc9f410c5c39344bbcab7176953daa
+      internalID: 731825944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Personagem_7
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 98
+        width: 17
+        height: 18
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3033cdcd710ecff4f9fe2db0ba2047f8
+      internalID: -1199845752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Personagem_8
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 99
+        width: 17
+        height: 18
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f27ff2f1e54ea264b86472364b62e3d4
+      internalID: -803469602
       vertices: []
       indices: 
       edges: []
@@ -199,6 +241,12 @@ TextureImporter:
       Personagem_0: -1555341184
       Personagem_1: 989201915
       Personagem_2: 325969227
+      Personagem_3: -713315737
+      Personagem_4: 1790387724
+      Personagem_5: -454131015
+      Personagem_6: 731825944
+      Personagem_7: -1199845752
+      Personagem_8: -803469602
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

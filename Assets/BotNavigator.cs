@@ -19,6 +19,7 @@ public class BotNavigator : MonoBehaviour
 {
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
+    Animator animator;
     BotWalkState currentWalkState;
     BotJumpState currentJumpState = BotJumpState.DontJump;
 
@@ -45,6 +46,7 @@ public class BotNavigator : MonoBehaviour
     {
         rb = this.GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
         
         int ignoreLayer = LayerMask.NameToLayer("Bot");
         layerMask = 1 << ignoreLayer; 
@@ -79,6 +81,8 @@ public class BotNavigator : MonoBehaviour
 
         if (grounded)
         {
+            animator.SetTrigger("Grounded");
+
             var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1.5f), 2f, layerMask);
             Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1.5f) * 2f, Color.red);
             if (bottomHit.collider == null)
@@ -93,7 +97,11 @@ public class BotNavigator : MonoBehaviour
         }
 
         Walk(playerSpeed);
-        if (currentJumpState == BotJumpState.Jump) Jump(jumpSpeed);
+        if (currentJumpState == BotJumpState.Jump)
+        {
+            animator.SetTrigger("Jump");
+            Jump(jumpSpeed);
+        }
     }
 
     private bool IsGrounded()
