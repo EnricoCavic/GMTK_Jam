@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DPA.Managers;
 
 public enum BotWalkState
 {
@@ -41,7 +42,10 @@ public class BotNavigator : MonoBehaviour
     Collider2D botCollider;
     Transform bottomBound;
     int layerMask;
-    
+
+    ResumePauseHandler resumePause;
+    public bool isResumed;
+
     void Awake()
     {
         rb = this.GetComponent<Rigidbody2D>();
@@ -55,55 +59,77 @@ public class BotNavigator : MonoBehaviour
         botCollider = this.GetComponent<Collider2D>();
     }
 
+    void Start()
+    {
+        resumePause = ResumePauseHandler.Instance;
+    }
+
     void FixedUpdate()
     {
-        topPosition = transform.position + new Vector3(0, spriteRenderer.bounds.extents.y * 2, 0);
-        frontPosition = transform.position + new Vector3(spriteRenderer.bounds.extents.x * sideSwitch, spriteRenderer.bounds.extents.y, 0);
-
-        bool grounded = IsGrounded();
-        currentJumpState = BotJumpState.DontJump;
-
-        if (IsNearWall())
+        if (!resumePause.pauseBot)
         {
-            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1f, layerMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
-            if (topBlockHit.collider != null)
-            {
-                sideSwitch *= -1;
-                spriteRenderer.flipX = !spriteRenderer.flipX;
+            if(!isResumed)
+            { 
+                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                animator.enabled = true;
+                isResumed = true;
             }
-            else if(grounded)
+
+            topPosition = transform.position + new Vector3(0, spriteRenderer.bounds.extents.y * 2, 0);
+            frontPosition = transform.position + new Vector3(spriteRenderer.bounds.extents.x * sideSwitch, spriteRenderer.bounds.extents.y, 0);
+
+            bool grounded = IsGrounded();
+            currentJumpState = BotJumpState.DontJump;
+
+            if (IsNearWall())
             {
-                //Debug.Log("Jump Up Obstacle");
-                currentJumpState = BotJumpState.Jump;
+                var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1f, layerMask);
+                Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
+                if (topBlockHit.collider != null)
+                {
+                    sideSwitch *= -1;
+                    spriteRenderer.flipX = !spriteRenderer.flipX;
+                }
+                else if(grounded)
+                {
+                    //Debug.Log("Jump Up Obstacle");
+                    currentJumpState = BotJumpState.Jump;
+                }
+            }
+
+            if (grounded)
+            {
+                animator.Play("Walk");
+
+                var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1.5f), 2f, layerMask);
+                Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1.5f) * 2f, Color.red);
+                if (bottomHit.collider == null)
+                {
+                    //Debug.Log("Jump Over Hole");
+                    currentJumpState = BotJumpState.Jump;
+                }
+            }
+            else
+            {
+                if(rb.velocity.y < -0.1f)
+                {
+                    rb.AddForce(Vector2.down * fallGravityMultiplier);
+                }
+            }
+
+            Walk(playerSpeed);
+            if (currentJumpState == BotJumpState.Jump)
+            {
+                animator.SetTrigger("Jump");
+                Jump(jumpSpeed);
             }
         }
 
-        if (grounded)
-        {
-            animator.Play("Walk");
-
-            var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1.5f), 2f, layerMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1.5f) * 2f, Color.red);
-            if (bottomHit.collider == null)
-            {
-                //Debug.Log("Jump Over Hole");
-                currentJumpState = BotJumpState.Jump;
-            }
-        }
         else
         {
-            if(rb.velocity.y < -0.1f)
-            {
-                rb.AddForce(Vector2.down * fallGravityMultiplier);
-            }
-        }
-
-        Walk(playerSpeed);
-        if (currentJumpState == BotJumpState.Jump)
-        {
-            animator.SetTrigger("Jump");
-            Jump(jumpSpeed);
+            isResumed = false;
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            animator.enabled = false;
         }
     }
 

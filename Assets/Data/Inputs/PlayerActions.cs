@@ -44,6 +44,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SwitchResumePause"",
+                    ""type"": ""Button"",
+                    ""id"": ""0d1acae5-98cc-4b61-b560-4db7c4947f3f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -68,6 +77,17 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""action"": ""SelectDelta"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a3b72ba7-749a-4380-a1a7-d25edb605a72"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": ""Tap"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchResumePause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -78,6 +98,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Select = m_Gameplay.FindAction("Select", throwIfNotFound: true);
         m_Gameplay_SelectDelta = m_Gameplay.FindAction("SelectDelta", throwIfNotFound: true);
+        m_Gameplay_SwitchResumePause = m_Gameplay.FindAction("SwitchResumePause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -141,12 +162,14 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
     private readonly InputAction m_Gameplay_Select;
     private readonly InputAction m_Gameplay_SelectDelta;
+    private readonly InputAction m_Gameplay_SwitchResumePause;
     public struct GameplayActions
     {
         private @PlayerActions m_Wrapper;
         public GameplayActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Select => m_Wrapper.m_Gameplay_Select;
         public InputAction @SelectDelta => m_Wrapper.m_Gameplay_SelectDelta;
+        public InputAction @SwitchResumePause => m_Wrapper.m_Gameplay_SwitchResumePause;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -162,6 +185,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @SelectDelta.started += instance.OnSelectDelta;
             @SelectDelta.performed += instance.OnSelectDelta;
             @SelectDelta.canceled += instance.OnSelectDelta;
+            @SwitchResumePause.started += instance.OnSwitchResumePause;
+            @SwitchResumePause.performed += instance.OnSwitchResumePause;
+            @SwitchResumePause.canceled += instance.OnSwitchResumePause;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -172,6 +198,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @SelectDelta.started -= instance.OnSelectDelta;
             @SelectDelta.performed -= instance.OnSelectDelta;
             @SelectDelta.canceled -= instance.OnSelectDelta;
+            @SwitchResumePause.started -= instance.OnSwitchResumePause;
+            @SwitchResumePause.performed -= instance.OnSwitchResumePause;
+            @SwitchResumePause.canceled -= instance.OnSwitchResumePause;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -193,5 +222,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     {
         void OnSelect(InputAction.CallbackContext context);
         void OnSelectDelta(InputAction.CallbackContext context);
+        void OnSwitchResumePause(InputAction.CallbackContext context);
     }
 }

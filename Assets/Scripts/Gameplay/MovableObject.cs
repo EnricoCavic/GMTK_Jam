@@ -14,6 +14,8 @@ public class MovableObject : MonoBehaviour
 
     public bool isSelected = false;
 
+    ResumePauseHandler resumePause;
+
     private void Awake()
     {
         mainCam = Camera.main;
@@ -24,10 +26,12 @@ public class MovableObject : MonoBehaviour
     {
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.bodyType = RigidbodyType2D.Static;
+        resumePause = ResumePauseHandler.Instance;
     }
 
     private void Update()
     {
+        if (!resumePause.pauseBot) return;
         if (!isSelected) return;
 
         Vector2 move = GetMousePosition() - (Vector2)transform.position;
@@ -36,6 +40,7 @@ public class MovableObject : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (!resumePause.pauseBot) return;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.bodyType = RigidbodyType2D.Dynamic;
         isSelected = true;
@@ -43,6 +48,7 @@ public class MovableObject : MonoBehaviour
 
     private void OnMouseUp()
     {
+        if (!resumePause.pauseBot) return;
         rb.velocity = Vector2.zero;
 
         Vector2 currentPos = rb.transform.position;
