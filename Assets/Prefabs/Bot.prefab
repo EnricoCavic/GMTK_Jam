@@ -101,7 +101,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 8
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 988446fec68ac68438c1de1f044f70ec, type: 2}
@@ -128,8 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 4
-  sideSwitch: 1
-  jumpSpeed: 3
+  jumpSpeed: 10
+  fallGravityMultiplier: 40
 --- !u!70 &7295408015970128763
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

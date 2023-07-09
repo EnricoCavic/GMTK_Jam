@@ -24,9 +24,10 @@ public class BotNavigator : MonoBehaviour
 
     public float playerSpeed;
     //public float maxSpeed = 2;
-    public short sideSwitch = 1;
+    private short sideSwitch = 1;
 
     public float jumpSpeed;
+    public float fallGravityMultiplier = 5f;
     //float maxJumpHeight = 2;
     //float minJumpHeight = 0.01f;
 
@@ -62,8 +63,8 @@ public class BotNavigator : MonoBehaviour
 
         if (IsNearWall())
         {
-            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 2f, layerMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0) * 2f, Color.red);
+            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1f, layerMask);
+            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
             if (topBlockHit.collider != null)
             {
                 sideSwitch *= -1;
@@ -71,7 +72,7 @@ public class BotNavigator : MonoBehaviour
             }
             else if(grounded)
             {
-                Debug.Log("Jump Up Obstacle");
+                //Debug.Log("Jump Up Obstacle");
                 currentJumpState = BotJumpState.Jump;
             }
         }
@@ -82,9 +83,13 @@ public class BotNavigator : MonoBehaviour
             Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1) * 2f, Color.red);
             if (bottomHit.collider == null)
             {
-                Debug.Log("Jump Over Hole");
+                //Debug.Log("Jump Over Hole");
                 currentJumpState = BotJumpState.Jump;
             }
+        }
+        else if(rb.velocity.y < -0.1f)
+        {
+            rb.AddForce(Vector2.down * fallGravityMultiplier);
         }
 
         Walk(playerSpeed);
@@ -108,7 +113,7 @@ public class BotNavigator : MonoBehaviour
         frontWallTempHit = Physics2D.BoxCast(frontPosition, boxSize, 0, transform.right * sideSwitch, Mathf.Infinity, layerMask);
         if (frontWallTempHit.collider == null) return false;
 
-        return frontWallTempHit.distance < 1.5f;
+        return frontWallTempHit.distance < 0.1f;
     }
 
     public void Jump(float mJumpSpeed)
