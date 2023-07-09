@@ -81,7 +81,7 @@ public class BotNavigator : MonoBehaviour
 
         if (grounded)
         {
-            animator.SetTrigger("Grounded");
+            animator.Play("Walk");
 
             var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1.5f), 2f, layerMask);
             Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1.5f) * 2f, Color.red);
@@ -91,9 +91,12 @@ public class BotNavigator : MonoBehaviour
                 currentJumpState = BotJumpState.Jump;
             }
         }
-        else if(rb.velocity.y < -0.1f)
+        else
         {
-            rb.AddForce(Vector2.down * fallGravityMultiplier);
+            if(rb.velocity.y < -0.1f)
+            {
+                rb.AddForce(Vector2.down * fallGravityMultiplier);
+            }
         }
 
         Walk(playerSpeed);
