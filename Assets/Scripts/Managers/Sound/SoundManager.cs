@@ -15,7 +15,7 @@ namespace DPA.Managers
         private const float MINUTE = 60.0f;
         private double nextEventTime;
         private int flip;
-        private float trackVolume = 1f;
+        private float trackVolume = 0.5f;
 
         // estruturar os audio sources como pares para ter mais controle deles
         private List<AudioSource> soundtrackChannels;
@@ -51,7 +51,7 @@ namespace DPA.Managers
 
             double time = AudioSettings.dspTime;
 
-            if (trackVolume < 1f)
+            if (trackVolume < 0.5f)
             {
                 trackVolume += Time.deltaTime / 10;
                 UpdateVolume();
