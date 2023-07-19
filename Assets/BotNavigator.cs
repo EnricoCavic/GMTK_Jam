@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DPA.Managers;
+using Unity.VisualScripting;
 
 public enum BotJumpState
 {
@@ -39,8 +40,8 @@ public class BotNavigator : MonoBehaviour
     void Awake()
     {
         rb = this.GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        animator = GetComponentInChildren<Animator>();
         
         int ignoreLayer = LayerMask.NameToLayer("Bot");
         layerMask = 1 << ignoreLayer; 
@@ -71,7 +72,7 @@ public class BotNavigator : MonoBehaviour
         }
 
         topPosition = transform.position + new Vector3(0, spriteRenderer.bounds.extents.y * 2, 0);
-        frontPosition = transform.position + new Vector3(spriteRenderer.bounds.extents.x * sideSwitch, spriteRenderer.bounds.extents.y, 0);
+        frontPosition = transform.position + new Vector3(spriteRenderer.bounds.extents.x * sideSwitch, spriteRenderer.bounds.extents.y * 0.8f, 0);
 
         bool grounded = IsGrounded();
         currentJumpState = BotJumpState.DontJump;
@@ -135,10 +136,20 @@ public class BotNavigator : MonoBehaviour
     private bool IsNearWall()
     {
         Vector2 boxSize = new Vector2(0.02f, 0.6f);
-        frontWallTempHit = Physics2D.BoxCast(frontPosition, boxSize, 0, transform.right * sideSwitch, Mathf.Infinity, layerMask);
-        if (frontWallTempHit.collider == null) return false;
+        frontWallTempHit = Physics2D.BoxCast(frontPosition, boxSize, 0, transform.right * sideSwitch, 0.1f, layerMask);
 
-        return frontWallTempHit.distance < 0.1f;
+        return frontWallTempHit.collider != null;
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        Color color = Color.red;
+        if (IsNearWall())
+            color = Color.green;
+
+        Gizmos.color = color;
+        Gizmos.DrawCube(frontPosition + new Vector2(sideSwitch * 0.1f, 0f), new Vector2(0.02f, 0.6f));
     }
 
     public void Jump(float mJumpSpeed)
