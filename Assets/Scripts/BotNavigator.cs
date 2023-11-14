@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DPA.Managers;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
+using System;
 
 public enum BotJumpState
 {
@@ -15,17 +17,13 @@ public class BotNavigator : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
     Animator animator;
-    BotJumpState currentJumpState = BotJumpState.DontJump;
-
-    public float playerSpeed;
-    //public float maxSpeed = 2;
     private short sideSwitch = 1;
 
-    public float jumpSpeed;
+    BotJumpState currentJumpState = BotJumpState.DontJump;
+    public float playerSpeed;
+    public float jumpForce;
     public float fallGravityMultiplier = 5f;
-    //float maxJumpHeight = 2;
-    //float minJumpHeight = 0.01f;
-
+    
     Vector2 topPosition;
     Vector2 frontPosition;
 
@@ -34,7 +32,7 @@ public class BotNavigator : MonoBehaviour
 
     int layerMask;
 
-    ResumePauseHandler resumePause;
+    ResumePauseHandler pauseHandler;
     public bool isResumed;
 
     void Awake()
@@ -50,25 +48,28 @@ public class BotNavigator : MonoBehaviour
 
     void Start()
     {
-        resumePause = ResumePauseHandler.Instance;
+        pauseHandler = ResumePauseHandler.Instance;
+        pauseHandler.onPaused += PauseBot;
+        pauseHandler.onResumed += ResumeBot;
+    }
+
+    private void PauseBot()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        animator.enabled = false;
+    }
+
+    private void ResumeBot()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        animator.enabled = true;
     }
 
     void FixedUpdate()
     {
-        if (resumePause.pauseBot)
+        if (pauseHandler.isPaused)
         {
-            isResumed = false;
-            rb.constraints = RigidbodyConstraints2D.FreezeAll;
-            animator.enabled = false;
             return;
-        }
-
-
-        if (!isResumed)
-        {
-            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-            animator.enabled = true;
-            isResumed = true;
         }
 
         topPosition = transform.position + new Vector3(0, spriteRenderer.bounds.extents.y * 2, 0);
@@ -79,9 +80,7 @@ public class BotNavigator : MonoBehaviour
 
         if (IsNearWall())
         {
-            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1f, layerMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
-            if (topBlockHit.collider != null)
+            if (!CanJumpOver())
             {
                 sideSwitch *= -1;
                 spriteRenderer.flipX = !spriteRenderer.flipX;
@@ -117,31 +116,42 @@ public class BotNavigator : MonoBehaviour
         if (currentJumpState == BotJumpState.Jump)
         {
             animator.SetTrigger("Jump");
-            Jump(jumpSpeed);
+            Jump(jumpForce);
         }
         
     }
 
-    private bool IsGrounded()
-    {
-        Vector2 boxSize = new Vector2(0.6f, 0.02f);
-        groundCheckTempHit = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, Mathf.Infinity, layerMask);
-        if (groundCheckTempHit.collider == null) return false;
-
-        //Debug.Log(hit.distance);
-        Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
-        return groundCheckTempHit.distance < 0.01f;
-    }
-
-    private bool IsNearWall()
-    {
-        Vector2 boxSize = new Vector2(0.02f, 0.6f);
-        frontWallTempHit = Physics2D.BoxCast(frontPosition, boxSize, 0, transform.right * sideSwitch, 0.1f, layerMask);
-
-        return frontWallTempHit.collider != null;
-
-    }
-
+#region Detection
+    
+        private bool CanJumpOver()
+        {
+            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1f, layerMask);
+            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
+            bool canJumpOver = topBlockHit.collider == null;
+            return canJumpOver;
+        }
+    
+        private bool IsGrounded()
+        {
+            Vector2 boxSize = new Vector2(0.6f, 0.02f);
+            groundCheckTempHit = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, Mathf.Infinity, layerMask);
+            if (groundCheckTempHit.collider == null) return false;
+    
+            //Debug.Log(hit.distance);
+            Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
+            return groundCheckTempHit.distance < 0.01f;
+        }
+    
+        private bool IsNearWall()
+        {
+            Vector2 boxSize = new Vector2(0.02f, 0.6f);
+            frontWallTempHit = Physics2D.BoxCast(frontPosition, boxSize, 0, transform.right * sideSwitch, 0.1f, layerMask);
+    
+            return frontWallTempHit.collider != null;
+    
+        }
+    
+#endregion
     private void OnDrawGizmos()
     {
         Color color = Color.red;
@@ -166,8 +176,10 @@ public class BotNavigator : MonoBehaviour
         rb.velocity = new Vector2(mPlayerSpeed * sideSwitch, rb.velocity.y);
     }
 
+}
 
-
-
-
+public interface IBotRoutine
+{
+    void DoRoutine();
+    IBotRoutine NextRoutine();
 }
