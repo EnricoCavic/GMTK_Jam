@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 4
-  jumpSpeed: 10
+  jumpForce: 12
   fallGravityMultiplier: 40
   isResumed: 0
 --- !u!70 &7295408015970128763
