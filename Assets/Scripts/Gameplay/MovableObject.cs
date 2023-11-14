@@ -48,8 +48,9 @@ public class MovableObject : MonoBehaviour
         if (!resumePause.isPaused) return;
         rb.velocity = Vector2.zero;
 
-        Vector2 currentPos = rb.transform.position;
-        rb.position = new(Mathf.Round(currentPos.x), Mathf.Round(currentPos.y));
+        Vector2 currentPos = transform.position;
+        // esse round precisa ser para números terminados em .5
+        transform.position = new(Mathf.Round(currentPos.x), Mathf.Round(currentPos.y));
 
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.bodyType = RigidbodyType2D.Static;
