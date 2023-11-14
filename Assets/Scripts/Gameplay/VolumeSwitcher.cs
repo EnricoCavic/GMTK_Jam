@@ -17,7 +17,7 @@ public class VolumeSwitcher : MonoBehaviour
 
     void Awake()
     {
-        volume = this.GetComponent<Volume>();
+        volume = GetComponent<Volume>();
         selectedProfile = resumedProfile;
     }
 
@@ -29,7 +29,7 @@ public class VolumeSwitcher : MonoBehaviour
 
     public void SwitchVolume(InputAction.CallbackContext context)
     {
-        Debug.Log("troca");
+        // Debug.Log("troca");
         selectedProfile = (selectedProfile == resumedProfile ? pausedProfile : resumedProfile);
         volume.profile = selectedProfile;
     }

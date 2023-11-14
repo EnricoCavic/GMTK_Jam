@@ -5,5 +5,5 @@ using UnityEngine.AddressableAssets;
 public class LoadNextScene : MonoBehaviour
 {
     [SerializeField] private AssetReference nextScene;
-    public void Load() => SceneManager.Instance.LoadScene(nextScene);
+    public void Load() => SceneHandler.Instance.LoadScene(nextScene);
 }

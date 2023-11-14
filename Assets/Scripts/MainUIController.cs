@@ -5,21 +5,30 @@ using UnityEngine;
 
 public class MainUIController : MonoBehaviour
 {
-    private PlayerActions pActions;
-
+    private InputManager inputManager;
     [SerializeField] private GameObject playUI;
     [SerializeField] private GameObject pauseUI;
 
     private void OnEnable()
     {
-        pActions = InputManager.Instance.actions;
-        pActions.Gameplay.SwitchResumePause.performed += SwitchResumePause;
+        IEnumerator TryGetManager()
+        {
+            while(inputManager == null)
+            {
+                inputManager = InputManager.Instance;
+                yield return null;
+            }
+            inputManager.actions.Gameplay.SwitchResumePause.performed += SwitchResumePause;
+        }
+        StartCoroutine(TryGetManager());
     }
 
     private void OnDisable()
     {
-        pActions.Gameplay.SwitchResumePause.performed -= SwitchResumePause;
+        inputManager.actions.Gameplay.SwitchResumePause.performed -= SwitchResumePause;
     }
+
+    
 
     private void SwitchResumePause(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {

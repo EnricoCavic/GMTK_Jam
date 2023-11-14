@@ -15,12 +15,12 @@ public class MovableObject : MonoBehaviour
 
     private void Awake()
     {
-        mainCam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
     }
 
     private void Start()
     {
+        mainCam = Camera.main;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.bodyType = RigidbodyType2D.Static;
         resumePause = ResumePauseHandler.Instance;

@@ -68,26 +68,26 @@ public class BotNavigator : MonoBehaviour
     void FixedUpdate()
     {
         if (pauseHandler.isPaused)
-        {
             return;
-        }
 
         topPosition = transform.position + new Vector3(0, spriteRenderer.bounds.extents.y * 2, 0);
         frontPosition = transform.position + new Vector3(spriteRenderer.bounds.extents.x * sideSwitch, spriteRenderer.bounds.extents.y * 0.8f, 0);
 
         bool grounded = IsGrounded();
+        Debug.Log("Grounded" + grounded);
         currentJumpState = BotJumpState.DontJump;
 
         if (IsNearWall())
         {
             if (!CanJumpOver())
             {
+                Debug.Log("Turn around");
                 sideSwitch *= -1;
                 spriteRenderer.flipX = !spriteRenderer.flipX;
             }
             else if (grounded)
             {
-                //Debug.Log("Jump Up Obstacle");
+                Debug.Log("Jump Up Obstacle");
                 currentJumpState = BotJumpState.Jump;
             }
         }
@@ -100,7 +100,7 @@ public class BotNavigator : MonoBehaviour
             Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1.5f) * 2f, Color.red);
             if (bottomHit.collider == null)
             {
-                //Debug.Log("Jump Over Hole");
+                Debug.Log("Jump Over Hole");
                 currentJumpState = BotJumpState.Jump;
             }
         }
@@ -176,6 +176,12 @@ public class BotNavigator : MonoBehaviour
         rb.velocity = new Vector2(mPlayerSpeed * sideSwitch, rb.velocity.y);
     }
 
+
+    void OnDestroy() 
+    {
+        pauseHandler.onPaused -= PauseBot;
+        pauseHandler.onResumed -= ResumeBot;
+    }
 }
 
 public interface IBotRoutine
