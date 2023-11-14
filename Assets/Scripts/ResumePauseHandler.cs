@@ -22,16 +22,9 @@ namespace DPA.Managers
             inputManager.actions.Gameplay.SwitchResumePause.performed += SwitchState;
         }
 
-        public void Restart()
-        {
-            pauseBot = false;
-        }
+        public void Restart() => pauseBot = false;
 
-
-        void SwitchState(InputAction.CallbackContext callbackContext)
-        {
-            pauseBot = !pauseBot;
-        }
+        void SwitchState(InputAction.CallbackContext callbackContext) => pauseBot = !pauseBot;
 
 
     }
