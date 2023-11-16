@@ -74,9 +74,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eedb69f5071d11e49bb3070aec7e586e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 7139289832180504834}
+  spriteRenderer: {fileID: 7579669450295000709}
+  animator: {fileID: 5030140145699346558}
   playerSpeed: 4
   jumpForce: 12
   fallGravityMultiplier: 40
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 1
   isResumed: 0
 --- !u!70 &7295408015970128763
 CapsuleCollider2D:

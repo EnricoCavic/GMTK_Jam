@@ -14,37 +14,22 @@ public enum BotJumpState
 
 public class BotNavigator : MonoBehaviour
 {
-    Rigidbody2D rb;
-    SpriteRenderer spriteRenderer;
-    Animator animator;
-    private short sideSwitch = 1;
+    [SerializeField] Rigidbody2D rb;
+    [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] Animator animator;
+    [SerializeField] short sideSwitch = 1;
 
     BotJumpState currentJumpState = BotJumpState.DontJump;
     public float playerSpeed;
     public float jumpForce;
     public float fallGravityMultiplier = 5f;
+    [SerializeField] LayerMask collisionMask;
+
+    [Space, SerializeField] Vector2 frontBoxSize = new Vector2(0.02f, 0.6f);
     
     Vector2 topPosition;
-    Vector2 frontPosition;
-
     RaycastHit2D groundCheckTempHit;
-    RaycastHit2D frontWallTempHit;
-
-    int layerMask;
-
     ResumePauseHandler pauseHandler;
-    public bool isResumed;
-
-    void Awake()
-    {
-        rb = this.GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        animator = GetComponentInChildren<Animator>();
-        
-        int ignoreLayer = LayerMask.NameToLayer("Bot");
-        layerMask = 1 << ignoreLayer; 
-        layerMask = ~layerMask;
-    }
 
     void Start()
     {
@@ -70,33 +55,15 @@ public class BotNavigator : MonoBehaviour
         if (pauseHandler.isPaused)
             return;
 
-        topPosition = transform.position + new Vector3(0, spriteRenderer.bounds.extents.y * 2, 0);
-        frontPosition = transform.position + new Vector3(spriteRenderer.bounds.extents.x * sideSwitch, spriteRenderer.bounds.extents.y * 0.8f, 0);
-
-        bool grounded = IsGrounded();
-        Debug.Log("Grounded" + grounded);
+        topPosition = GetTopPosition();
         currentJumpState = BotJumpState.DontJump;
 
-        if (IsNearWall())
-        {
-            if (!CanJumpOver())
-            {
-                Debug.Log("Turn around");
-                sideSwitch *= -1;
-                spriteRenderer.flipX = !spriteRenderer.flipX;
-            }
-            else if (grounded)
-            {
-                Debug.Log("Jump Up Obstacle");
-                currentJumpState = BotJumpState.Jump;
-            }
-        }
-
-        if (grounded)
-        {
+        if (IsGrounded())
+        {        
+            WallChecks();
             animator.Play("Walk");
 
-            var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1.5f), 2f, layerMask);
+            var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1.5f), 2f, collisionMask);
             Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1.5f) * 2f, Color.red);
             if (bottomHit.collider == null)
             {
@@ -106,7 +73,7 @@ public class BotNavigator : MonoBehaviour
         }
         else
         {
-            if (rb.velocity.y < -0.1f)
+            if (IsFalling)
             {
                 rb.AddForce(Vector2.down * fallGravityMultiplier);
             }
@@ -118,38 +85,57 @@ public class BotNavigator : MonoBehaviour
             animator.SetTrigger("Jump");
             Jump(jumpForce);
         }
-        
+
     }
 
-#region Detection
+
+    #region Detection
+
+    Vector2 GetTopPosition() => transform.position + new Vector3(0, spriteRenderer.bounds.extents.y * 2, 0);
+    Vector2 GetFrontPosition() => transform.position + new Vector3(spriteRenderer.bounds.extents.x * sideSwitch, spriteRenderer.bounds.extents.y * 0.8f);
+    bool IsFalling => rb.velocity.y < -0.1f;
+
+    private bool CanJumpOver()
+    {
+        var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1f, collisionMask);
+        Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
+        return topBlockHit.collider == null;
+    }
+
+    private bool IsGrounded()
+    {
+        Vector2 boxSize = new Vector2(0.6f, 0.02f);
+        groundCheckTempHit = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, Mathf.Infinity, collisionMask);
+        Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
+        if (groundCheckTempHit.collider == null) return false;
+        //Debug.Log(hit.distance);
+        return groundCheckTempHit.distance < 0.01f;
+    }
+
+    private bool IsNearWall()
+    {  
+        return Physics2D.BoxCast(GetFrontPosition(), frontBoxSize, 0, transform.right * sideSwitch, 0f, collisionMask).collider != null;
+    }
+
     
-        private bool CanJumpOver()
+    private void WallChecks()
+    {
+        if (IsNearWall())
         {
-            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1f, layerMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
-            bool canJumpOver = topBlockHit.collider == null;
-            return canJumpOver;
-        }
-    
-        private bool IsGrounded()
-        {
-            Vector2 boxSize = new Vector2(0.6f, 0.02f);
-            groundCheckTempHit = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, Mathf.Infinity, layerMask);
-            if (groundCheckTempHit.collider == null) return false;
-    
-            //Debug.Log(hit.distance);
-            Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
-            return groundCheckTempHit.distance < 0.01f;
-        }
-    
-        private bool IsNearWall()
-        {
-            Vector2 boxSize = new Vector2(0.02f, 0.6f);
-            frontWallTempHit = Physics2D.BoxCast(frontPosition, boxSize, 0, transform.right * sideSwitch, 0.1f, layerMask);
-    
-            return frontWallTempHit.collider != null;
+            if (CanJumpOver())
+            {
+                Debug.Log("Jump Up Obstacle");
+                currentJumpState = BotJumpState.Jump;
+                return;
+            } 
+
+
+            Debug.Log("Turn around");
+            sideSwitch *= -1;
+            spriteRenderer.flipX = !spriteRenderer.flipX;
     
         }
+    }
     
 #endregion
     private void OnDrawGizmos()
@@ -159,7 +145,7 @@ public class BotNavigator : MonoBehaviour
             color = Color.green;
 
         Gizmos.color = color;
-        Gizmos.DrawCube(frontPosition + new Vector2(sideSwitch * 0.1f, 0f), new Vector2(0.02f, 0.6f));
+        Gizmos.DrawCube(GetFrontPosition(), frontBoxSize);
     }
 
     public void Jump(float mJumpSpeed)
@@ -182,10 +168,4 @@ public class BotNavigator : MonoBehaviour
         pauseHandler.onPaused -= PauseBot;
         pauseHandler.onResumed -= ResumeBot;
     }
-}
-
-public interface IBotRoutine
-{
-    void DoRoutine();
-    IBotRoutine NextRoutine();
 }
