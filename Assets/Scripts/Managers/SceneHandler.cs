@@ -41,13 +41,20 @@ namespace DPA.Managers
             if (!testMode) return;
             SceneManager.SetActiveScene(gameObject.scene);
 #endif
+            Debug.Log("Current loaded scenes " + SceneManager.sceneCount);
         }
 
         public void LoadScene(object _sceneToLoad)
         {
             if (loadedScene.Scene.path == null)
             {
-                SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(SceneManager.sceneCount - 1));
+                var sceneCount = SceneManager.sceneCount;
+                for (int i = 0; i < sceneCount; i++)
+                {
+                    if(SceneManager.GetSceneAt(i) != gameObject.scene)
+                        SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(i));
+                }
+
                 LoadAdditiveScene(_sceneToLoad);
                 return;
             }
