@@ -23,11 +23,11 @@ namespace DPA.Generic
 
         public virtual void Update()
         {
+            CurrentState.Tick();
             stateDecision = CurrentState.CheckTransitions();
             // fullStateName = CurrentState.ToString();
             // currentStateName = fullStateName[(fullStateName.LastIndexOf('.') + 1)..];
 
-            CurrentState.Tick();
 
             if (queuedState == null)
             { 

@@ -40,8 +40,8 @@ namespace DPA.Managers
 #if UNITY_EDITOR
             if (!testMode) return;
             SceneManager.SetActiveScene(gameObject.scene);
+            //Debug.Log("Current loaded scenes " + SceneManager.sceneCount);
 #endif
-            Debug.Log("Current loaded scenes " + SceneManager.sceneCount);
         }
 
         public void LoadScene(object _sceneToLoad)
