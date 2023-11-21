@@ -31,7 +31,6 @@ namespace DPA.Gameplay
         
         BotJumpState currentJumpState = BotJumpState.DontJump;
         Vector2 topPosition;
-        RaycastHit2D groundCheckTempHit;
         ResumePauseHandler pauseHandler;
 
         public BotWalk botWalk;
@@ -121,7 +120,7 @@ namespace DPA.Gameplay
         public bool IsGrounded()
         {
             Vector2 boxSize = new Vector2(0.6f, 0.02f);
-            groundCheckTempHit = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, Mathf.Infinity, collisionMask);
+            var groundCheckTempHit = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, Mathf.Infinity, collisionMask);
             Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
             if (groundCheckTempHit.collider == null) return false;
             //Debug.Log(hit.distance);
