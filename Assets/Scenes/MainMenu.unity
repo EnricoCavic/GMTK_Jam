@@ -1643,10 +1643,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1382002317054105854, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
-      propertyPath: frontBoxSize.x
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1382002317054105854, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
       propertyPath: ignoreMask.m_Bits
       value: 1
       objectReference: {fileID: 0}
