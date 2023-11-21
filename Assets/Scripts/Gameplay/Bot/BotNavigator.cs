@@ -36,11 +36,13 @@ namespace DPA.Gameplay
 
         public BotWalk botWalk;
         public BotJump botJump;
+        public BotFall botFall;
 
         void Awake()
         {
             botWalk = new(this);
             botJump = new(this);
+            botFall = new(this);
         }
 
         void Start()
@@ -76,14 +78,12 @@ namespace DPA.Gameplay
             currentJumpState = BotJumpState.DontJump;
 
             if (IsGrounded())
-            {        
+            {
                 // foram migrados pra stateMachine
                 //animator.Play("Walk");
                 //WallChecks();
 
-                var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1.5f), 2f, collisionMask);
-                Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1.5f) * 2f, Color.red);
-                if (bottomHit.collider == null)
+                if (IsNearHole())
                 {
                     Debug.Log("Jump Over Hole");
                     currentJumpState = BotJumpState.Jump;
@@ -104,7 +104,6 @@ namespace DPA.Gameplay
             }
 
         }
-
 
         #region Detection
 
@@ -134,7 +133,14 @@ namespace DPA.Gameplay
             return Physics2D.BoxCast(GetFrontPosition(), frontBoxSize, 0, transform.right * sideSwitch, 0f, collisionMask).collider != null;
         }
 
-        
+        public bool IsNearHole()
+        {
+            var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1.5f), 2f, collisionMask);
+            Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1.5f) * 2f, Color.red);
+            return bottomHit.collider == null;
+        }
+
+        // movido
         public void WallChecks()
         {
             if (IsNearWall())

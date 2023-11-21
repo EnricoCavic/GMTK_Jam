@@ -7,7 +7,6 @@ namespace DPA.Gameplay
     public class BotJump : IState
     {
         readonly BotNavigator bot;
-
         public BotJump(BotNavigator _bot) => bot = _bot;
 
         public void Enter()
@@ -28,6 +27,32 @@ namespace DPA.Gameplay
 
         }
 
+    }
+
+    public class BotFall : IState
+    {
+        readonly BotNavigator bot;
+        public BotFall(BotNavigator _bot) => bot = _bot;
+
+        public void Enter()
+        {
+
+        }
+
+        public void Tick()
+        {
+
+        }
+
+        public IState CheckTransitions()
+        {
+            return this;
+        }
+
+        public void Exit()
+        {
+
+        }
     }
 
 }
