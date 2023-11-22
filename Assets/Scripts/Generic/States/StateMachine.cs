@@ -5,8 +5,8 @@ namespace DPA.Generic
     public abstract class StateMachine : MonoBehaviour
     {
         // Debug vars
-        //public string currentStateName;
-        //private string fullStateName;
+        public string currentStateName;
+        private string fullStateName;
 
         public IState CurrentState { get; protected set; }
         public IState DefaultState { get; protected set; }
@@ -25,8 +25,8 @@ namespace DPA.Generic
         {
             CurrentState.Tick();
             stateDecision = CurrentState.CheckTransitions();
-            // fullStateName = CurrentState.ToString();
-            // currentStateName = fullStateName[(fullStateName.LastIndexOf('.') + 1)..];
+            fullStateName = CurrentState.ToString();
+            currentStateName = fullStateName[(fullStateName.LastIndexOf('.') + 1)..];
 
 
             if (queuedState == null)

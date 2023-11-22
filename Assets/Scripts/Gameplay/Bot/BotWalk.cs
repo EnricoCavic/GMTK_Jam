@@ -15,7 +15,6 @@ namespace DPA.Gameplay
         public void Enter()
         {
             bot.animator.Play("Walk");
-            Debug.Log("BotWalk Enter");
         }
 
         public void Tick()
@@ -23,17 +22,14 @@ namespace DPA.Gameplay
             isNearWall = bot.IsNearWall();
             canJumpOver = bot.CanJumpOver();
 
-            if(isNearWall)
-            {
-                if(!canJumpOver)
-                    bot.ChangeDirection();
-            }
+            if (isNearWall && !canJumpOver)
+                bot.ChangeDirection();
 
         }
 
         public IState CheckTransitions()
         {
-            if(isNearWall && canJumpOver)
+            if(isNearWall && canJumpOver || bot.IsNearHole())
                 return bot.botJump;
 
             return this;

@@ -29,7 +29,7 @@ namespace DPA.Gameplay
 
         [Space, SerializeField] Vector2 frontBoxSize = new Vector2(0.02f, 0.6f);
         
-        BotJumpState currentJumpState = BotJumpState.DontJump;
+        //BotJumpState currentJumpState = BotJumpState.DontJump;
         Vector2 topPosition;
         ResumePauseHandler pauseHandler;
 
@@ -71,37 +71,9 @@ namespace DPA.Gameplay
                 return;
 
             Move(playerSpeed);
-            base.Update();
-
             topPosition = GetTopPosition();
-            currentJumpState = BotJumpState.DontJump;
 
-            if (IsGrounded())
-            {
-                // foram migrados pra stateMachine
-                //animator.Play("Walk");
-                //WallChecks();
-
-                if (IsNearHole())
-                {
-                    Debug.Log("Jump Over Hole");
-                    currentJumpState = BotJumpState.Jump;
-                }
-            }
-            else
-            {
-                if (IsFalling)
-                {
-                    rb.AddForce(Vector2.down * fallGravityMultiplier);
-                }
-            }
-
-
-            if (currentJumpState == BotJumpState.Jump)
-            {
-                Jump(jumpForce);
-            }
-
+            base.Update();
         }
 
         #region Detection
@@ -123,7 +95,7 @@ namespace DPA.Gameplay
             var groundCheckTempHit = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, Mathf.Infinity, collisionMask);
             Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
             if (groundCheckTempHit.collider == null) return false;
-            //Debug.Log(hit.distance);
+
             return groundCheckTempHit.distance < 0.01f;
         }
 
@@ -139,30 +111,6 @@ namespace DPA.Gameplay
             return bottomHit.collider == null;
         }
 
-        // movido
-        public void WallChecks()
-        {
-            if (IsNearWall())
-            {
-                if (CanJumpOver())
-                {
-                    Debug.Log("Jump Up Obstacle");
-                    currentJumpState = BotJumpState.Jump;
-                    return;
-                }
-
-                ChangeDirection();
-
-            }
-        }
-
-        public void ChangeDirection()
-        {
-            Debug.Log("Turn around");
-            sideSwitch *= -1;
-            spriteRenderer.flipX = !spriteRenderer.flipX;
-        }
-
         #endregion
         private void OnDrawGizmos()
         {
@@ -174,24 +122,32 @@ namespace DPA.Gameplay
             Gizmos.DrawCube(GetFrontPosition(), frontBoxSize);
         }
 
+        public void ApplyGravity()
+        {
+            rb.AddForce(fallGravityMultiplier * Time.deltaTime * Vector2.down);
+        }
+
         public void Jump() => Jump(jumpForce);
 
         public void Jump(float _jumpForce)
         {
-            // vamos remover isso daqui e alterar pela troca de estado
-            currentJumpState = BotJumpState.DontJump;
-         
             animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, 0f);
             Vector2 jump = new Vector2(0, _jumpForce);
             rb.AddForce(jump, ForceMode2D.Impulse);
         }
 
-        public void Move(float mPlayerSpeed)
+        public void Move(float _playerSpeed)
         {
-            rb.velocity = new Vector2(mPlayerSpeed * sideSwitch, rb.velocity.y);
+            rb.velocity = new Vector2(_playerSpeed * Time.deltaTime * sideSwitch, rb.velocity.y);
         }
 
+        public void ChangeDirection()
+        {
+            Debug.Log("Turn around");
+            sideSwitch *= -1;
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
 
         void OnDestroy() 
         {
