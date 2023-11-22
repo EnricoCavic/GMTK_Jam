@@ -21,6 +21,7 @@ namespace DPA.Gameplay
         {
             isNearWall = bot.IsNearWall();
             canJumpOver = bot.CanJumpOver();
+            bot.ApplyGravity(3f);
 
             if (isNearWall && !canJumpOver)
                 bot.ChangeDirection();
@@ -29,8 +30,11 @@ namespace DPA.Gameplay
 
         public IState CheckTransitions()
         {
-            if(isNearWall && canJumpOver || bot.IsNearHole())
-                return bot.botJump;
+            if(!bot.IsGrounded())
+                return bot.botFall;
+         
+            if((isNearWall || bot.IsNearHole()) && canJumpOver)
+                return bot.botJump;  
 
             return this;
         }

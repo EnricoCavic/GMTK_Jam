@@ -19,8 +19,8 @@ namespace DPA.Gameplay
         }
         public IState CheckTransitions()
         {
-            // if(bot.IsGrounded())
-            //     return bot.botWalk;
+            if(bot.IsGrounded())
+                return bot.botWalk;
 
             if(bot.IsFalling)
                 return bot.botFall;

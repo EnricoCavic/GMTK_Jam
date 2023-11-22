@@ -48,7 +48,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 8
+  m_LinearDrag: 12
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 988446fec68ac68438c1de1f044f70ec, type: 2}
@@ -74,17 +74,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eedb69f5071d11e49bb3070aec7e586e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentStateName: 
   rb: {fileID: 7139289832180504834}
   spriteRenderer: {fileID: 7579669450295000709}
   animator: {fileID: 5030140145699346558}
+  hitBox: {fileID: 7295408015970128763}
   sideSwitch: 1
-  playerSpeed: 4
-  jumpForce: 12
-  fallGravityMultiplier: 40
+  playerSpeed: 5
+  jumpForce: 16
+  fallGravityMultiplier: 5000
   collisionMask:
     serializedVersion: 2
     m_Bits: 1
-  frontBoxSize: {x: 0.1, y: 0.6}
+  frontBoxSize: {x: 0.2, y: 0.6}
 --- !u!70 &7295408015970128763
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

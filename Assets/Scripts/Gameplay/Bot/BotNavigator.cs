@@ -9,17 +9,12 @@ namespace DPA.Gameplay
     using Generic;
     using Managers;
 
-    public enum BotJumpState
-    {
-        Jump,
-        DontJump
-    }
-
     public class BotNavigator : StateMachine
     {
         public Rigidbody2D rb;
         public SpriteRenderer spriteRenderer;
         public Animator animator;
+        public CapsuleCollider2D hitBox;
         [SerializeField] short sideSwitch = 1;
 
         public float playerSpeed;
@@ -29,13 +24,14 @@ namespace DPA.Gameplay
 
         [Space, SerializeField] Vector2 frontBoxSize = new Vector2(0.02f, 0.6f);
         
-        //BotJumpState currentJumpState = BotJumpState.DontJump;
         Vector2 topPosition;
         ResumePauseHandler pauseHandler;
 
         public BotWalk botWalk;
         public BotJump botJump;
         public BotFall botFall;
+
+        private Vector2 resumedVelocity;
 
         void Awake()
         {
@@ -55,12 +51,14 @@ namespace DPA.Gameplay
 
         private void PauseBot()
         {
+            resumedVelocity = rb.velocity;
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
             animator.enabled = false;
         }
 
         private void ResumeBot()
         {
+            rb.velocity = resumedVelocity;
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             animator.enabled = true;
         }
@@ -72,19 +70,18 @@ namespace DPA.Gameplay
 
             Move(playerSpeed);
             topPosition = GetTopPosition();
-
             base.Update();
         }
 
         #region Detection
 
-        Vector2 GetTopPosition() => transform.position + new Vector3(0, spriteRenderer.bounds.extents.y * 2, 0);
-        Vector2 GetFrontPosition() => transform.position + new Vector3(spriteRenderer.bounds.extents.x * sideSwitch, spriteRenderer.bounds.extents.y * 0.8f);
+        Vector2 GetTopPosition() => transform.position + new Vector3(-sideSwitch * 0.25f, hitBox.bounds.extents.y * 2.5f, 0);
+        Vector2 GetFrontPosition() => hitBox.bounds.center + new Vector3(hitBox.bounds.extents.x * sideSwitch, 0);
         public bool IsFalling => rb.velocity.y < -0.1f;
 
         public bool CanJumpOver()
         {
-            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1f, collisionMask);
+            var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1.25f, collisionMask);
             Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
             return topBlockHit.collider == null;
         }
@@ -122,9 +119,9 @@ namespace DPA.Gameplay
             Gizmos.DrawCube(GetFrontPosition(), frontBoxSize);
         }
 
-        public void ApplyGravity()
+        public void ApplyGravity(float _multiplier = 1f)
         {
-            rb.AddForce(fallGravityMultiplier * Time.deltaTime * Vector2.down);
+            rb.AddForce(fallGravityMultiplier * _multiplier * Time.deltaTime * Vector2.down, ForceMode2D.Force);
         }
 
         public void Jump() => Jump(jumpForce);
@@ -139,12 +136,12 @@ namespace DPA.Gameplay
 
         public void Move(float _playerSpeed)
         {
-            rb.velocity = new Vector2(_playerSpeed * Time.deltaTime * sideSwitch, rb.velocity.y);
+            rb.velocity = new Vector2(_playerSpeed * sideSwitch, rb.velocity.y);
         }
 
         public void ChangeDirection()
         {
-            Debug.Log("Turn around");
+            //Debug.Log("Turn around");
             sideSwitch *= -1;
             spriteRenderer.flipX = !spriteRenderer.flipX;
         }
