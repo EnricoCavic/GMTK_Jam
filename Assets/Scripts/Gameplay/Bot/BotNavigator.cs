@@ -32,6 +32,7 @@ namespace DPA.Gameplay
         public BotFall botFall;
 
         private Vector2 resumedVelocity;
+        public Vector2 currentBotVelocity;
 
         void Awake()
         {
@@ -68,6 +69,7 @@ namespace DPA.Gameplay
             if (pauseHandler.isPaused)
                 return;
 
+            currentBotVelocity = rb.velocity;
             Move(playerSpeed);
             topPosition = GetTopPosition();
             base.Update();
@@ -77,9 +79,9 @@ namespace DPA.Gameplay
 
         Vector2 GetTopPosition() => transform.position + new Vector3(-sideSwitch * 0.25f, hitBox.bounds.extents.y * 2.5f, 0);
         Vector2 GetFrontPosition() => hitBox.bounds.center + new Vector3(hitBox.bounds.extents.x * sideSwitch, 0);
-        public bool IsFalling => rb.velocity.y < -0.1f;
+        public bool IsFalling => rb.velocity.y < 0.1f;
 
-        public bool CanJumpOver()
+        public bool CanJumpOverWall()
         {
             var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1.25f, collisionMask);
             Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
@@ -103,8 +105,8 @@ namespace DPA.Gameplay
 
         public bool IsNearHole()
         {
-            var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -1.5f), 2f, collisionMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, -1.5f) * 2f, Color.red);
+            var bottomHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, -2f), 2f, collisionMask);
+            Debug.DrawRay(topPosition, new Vector2(sideSwitch, -2f), Color.red);
             return bottomHit.collider == null;
         }
 
@@ -119,7 +121,7 @@ namespace DPA.Gameplay
             Gizmos.DrawCube(GetFrontPosition(), frontBoxSize);
         }
 
-        public void ApplyGravity(float _multiplier = 1f)
+        public void ApplyGravityMultiplier(float _multiplier = 1f)
         {
             rb.AddForce(fallGravityMultiplier * _multiplier * Time.deltaTime * Vector2.down, ForceMode2D.Force);
         }
@@ -129,9 +131,17 @@ namespace DPA.Gameplay
         public void Jump(float _jumpForce)
         {
             animator.SetTrigger("Jump");
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
-            Vector2 jump = new Vector2(0, _jumpForce);
-            rb.AddForce(jump, ForceMode2D.Impulse);
+            rb.velocity = new Vector2(rb.velocity.x, _jumpForce);
+            //Vector2 jump = new Vector2(0f, _jumpForce);
+            //rb.AddForce(jump, ForceMode2D.Impulse);
+
+            // StartCoroutine(LogNextFrame());
+            // IEnumerator LogNextFrame()
+            // {
+            //     yield return null;
+            //     Debug.Log("Y velocity" + rb.velocity.y);
+
+            // }
         }
 
         public void Move(float _playerSpeed)

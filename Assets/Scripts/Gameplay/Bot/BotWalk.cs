@@ -15,13 +15,13 @@ namespace DPA.Gameplay
         public void Enter()
         {
             bot.animator.Play("Walk");
+            bot.rb.velocity = new Vector2(bot.rb.velocity.x, 0f);
         }
 
         public void Tick()
         {
             isNearWall = bot.IsNearWall();
-            canJumpOver = bot.CanJumpOver();
-            bot.ApplyGravity(3f);
+            canJumpOver = bot.CanJumpOverWall();
 
             if (isNearWall && !canJumpOver)
                 bot.ChangeDirection();
@@ -30,11 +30,11 @@ namespace DPA.Gameplay
 
         public IState CheckTransitions()
         {
-            if(!bot.IsGrounded())
-                return bot.botFall;
-         
             if((isNearWall || bot.IsNearHole()) && canJumpOver)
                 return bot.botJump;  
+         
+            if(!bot.IsGrounded())
+                return bot.botFall;
 
             return this;
         }

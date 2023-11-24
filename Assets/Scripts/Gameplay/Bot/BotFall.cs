@@ -16,8 +16,8 @@ namespace DPA.Gameplay
 
         public void Tick()
         {
-            bot.ApplyGravity();
-            if(bot.IsNearWall())
+            bot.ApplyGravityMultiplier();
+            if(bot.IsNearWall() && !bot.CanJumpOverWall())
                 bot.ChangeDirection();
         }
 
