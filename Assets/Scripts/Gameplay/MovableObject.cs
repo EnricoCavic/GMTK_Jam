@@ -1,4 +1,6 @@
+using System;
 using DPA.Managers;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,6 +26,7 @@ public class MovableObject : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.bodyType = RigidbodyType2D.Static;
         resumePause = ResumePauseHandler.Instance;
+        resumePause.onResumed += ResumeObj;
     }
 
     private void Update()
@@ -46,6 +49,12 @@ public class MovableObject : MonoBehaviour
     private void OnMouseUp()
     {
         if (!resumePause.isPaused) return;
+        ResumeObj();
+    }
+
+    private void ResumeObj()
+    {        
+        if (!isSelected) return;
         rb.velocity = Vector2.zero;
 
         Vector2 currentPos = transform.position;
@@ -60,6 +69,11 @@ public class MovableObject : MonoBehaviour
     private Vector2 GetMousePosition()
     {
         return mainCam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+    }
+
+    private void OnDestroy()
+    {
+        resumePause.onResumed -= ResumeObj;
     }
 
 }
