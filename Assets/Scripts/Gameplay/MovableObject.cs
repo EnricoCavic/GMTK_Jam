@@ -4,14 +4,15 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// script vai ter que ser refatorado para aceitar clicks do mouse e touchscreen
 public class MovableObject : MonoBehaviour
 {
     private Camera mainCam;
     private Rigidbody2D rb;
 
     [SerializeField] private float moveSpeed = 5f;
-
     public bool isSelected = false;
+    private Vector2 clickOffset = new(0,0);
 
     ResumePauseHandler resumePause;
 
@@ -34,13 +35,15 @@ public class MovableObject : MonoBehaviour
         if (!resumePause.isPaused) return;
         if (!isSelected) return;
 
-        Vector2 move = GetMousePosition() - (Vector2)transform.position;
-        rb.velocity = move * moveSpeed;
+        Vector2 moveDirection = GetMousePosition() + clickOffset - (Vector2)transform.position;
+        rb.velocity = moveDirection * moveSpeed;
     }
 
     private void OnMouseDown()
     {
         if (!resumePause.isPaused) return;
+
+        clickOffset = (Vector2)transform.position - GetMousePosition();
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.bodyType = RigidbodyType2D.Dynamic;
         isSelected = true;
