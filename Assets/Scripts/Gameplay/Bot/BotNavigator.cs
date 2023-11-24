@@ -50,20 +50,6 @@ namespace DPA.Gameplay
             pauseHandler.onResumed += ResumeBot;
         }
 
-        private void PauseBot()
-        {
-            resumedVelocity = rb.velocity;
-            rb.constraints = RigidbodyConstraints2D.FreezeAll;
-            animator.enabled = false;
-        }
-
-        private void ResumeBot()
-        {
-            rb.velocity = resumedVelocity;
-            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-            animator.enabled = true;
-        }
-
         public override void Update()
         {
             if (pauseHandler.isPaused)
@@ -111,15 +97,23 @@ namespace DPA.Gameplay
         }
 
         #endregion
-        private void OnDrawGizmos()
-        {
-            Color color = Color.red;
-            if (IsNearWall())
-                color = Color.green;
 
-            Gizmos.color = color;
-            Gizmos.DrawCube(GetFrontPosition(), frontBoxSize);
+        #region Actions
+
+        private void PauseBot()
+        {
+            resumedVelocity = rb.velocity;
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            animator.enabled = false;
         }
+
+        private void ResumeBot()
+        {
+            rb.velocity = resumedVelocity;
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            animator.enabled = true;
+        }
+
 
         public void ApplyGravityMultiplier(float _multiplier = 1f)
         {
@@ -132,16 +126,6 @@ namespace DPA.Gameplay
         {
             animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, _jumpForce);
-            //Vector2 jump = new Vector2(0f, _jumpForce);
-            //rb.AddForce(jump, ForceMode2D.Impulse);
-
-            // StartCoroutine(LogNextFrame());
-            // IEnumerator LogNextFrame()
-            // {
-            //     yield return null;
-            //     Debug.Log("Y velocity" + rb.velocity.y);
-
-            // }
         }
 
         public void Move(float _playerSpeed)
@@ -151,15 +135,26 @@ namespace DPA.Gameplay
 
         public void ChangeDirection()
         {
-            //Debug.Log("Turn around");
             sideSwitch *= -1;
             spriteRenderer.flipX = !spriteRenderer.flipX;
         }
+
+        #endregion
 
         void OnDestroy() 
         {
             pauseHandler.onPaused -= PauseBot;
             pauseHandler.onResumed -= ResumeBot;
+        }
+
+        private void OnDrawGizmos()
+        {
+            Color color = Color.red;
+            if (IsNearWall())
+                color = Color.green;
+
+            Gizmos.color = color;
+            Gizmos.DrawCube(GetFrontPosition(), frontBoxSize);
         }
     }
 
