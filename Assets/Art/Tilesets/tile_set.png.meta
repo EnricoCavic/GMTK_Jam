@@ -821,7 +821,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_60
+      name: Vertical0
       rect:
         serializedVersion: 2
         x: 0
@@ -846,7 +846,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_61
+      name: Vertical1
       rect:
         serializedVersion: 2
         x: 16
@@ -871,7 +871,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_74
+      name: Vertical2
       rect:
         serializedVersion: 2
         x: 32
@@ -896,7 +896,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_75
+      name: Vertical3
       rect:
         serializedVersion: 2
         x: 48
@@ -925,7 +925,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_78
+      name: Vertical4
       rect:
         serializedVersion: 2
         x: 80
@@ -952,7 +952,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_79
+      name: Vertical5
       rect:
         serializedVersion: 2
         x: 112
@@ -979,7 +979,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_102
+      name: Horizontal2
       rect:
         serializedVersion: 2
         x: 94
@@ -1004,7 +1004,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_109
+      name: Horizontal0
       rect:
         serializedVersion: 2
         x: 14
@@ -1029,7 +1029,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_111
+      name: Horizontal1
       rect:
         serializedVersion: 2
         x: 46
@@ -1058,7 +1058,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_114
+      name: Horizontal3
       rect:
         serializedVersion: 2
         x: 93
@@ -1083,7 +1083,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_117
+      name: Horizontal5
       rect:
         serializedVersion: 2
         x: 142
@@ -1110,11 +1110,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tile_set_139
+      name: Horizontal4
       rect:
         serializedVersion: 2
         x: 94
-        y: 0
+        y: 1
         width: 37
         height: 32
       alignment: 9
@@ -1399,28 +1399,35 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Horizontal0: 73967471
+      Horizontal1: -9351300
+      Horizontal2: 1661766746
+      Horizontal3: 1959924968
+      Horizontal4: -1083758473
+      Horizontal5: -935443246
+      Vertical0: -1485343505
+      Vertical1: -1219334564
+      Vertical2: -1387921816
+      Vertical3: 229808639
+      Vertical4: -1426922958
+      Vertical5: 882164362
       tile_set_0: -26843936
       tile_set_1: -1022505199
       tile_set_10: 832182003
       tile_set_100: 765123811
       tile_set_101: -673738106
-      tile_set_102: 1661766746
       tile_set_103: 1907911444
       tile_set_104: -811397912
       tile_set_105: 52276432
       tile_set_106: 519677535
       tile_set_107: 884586051
       tile_set_108: 1619875411
-      tile_set_109: 73967471
       tile_set_11: -1230927387
       tile_set_110: 610156338
-      tile_set_111: -9351300
       tile_set_112: -894577159
       tile_set_113: -394741629
-      tile_set_114: 1959924968
       tile_set_115: 637190994
       tile_set_116: -1163461931
-      tile_set_117: -935443246
       tile_set_118: 1863706286
       tile_set_119: 1736458049
       tile_set_12: -326055204
@@ -1444,7 +1451,6 @@ TextureImporter:
       tile_set_136: -351595308
       tile_set_137: 881931195
       tile_set_138: 15219722
-      tile_set_139: -1083758473
       tile_set_14: -1653995031
       tile_set_140: 2111196888
       tile_set_141: 14535700
@@ -1500,8 +1506,6 @@ TextureImporter:
       tile_set_58: -532050581
       tile_set_59: 2006934872
       tile_set_6: -1758146491
-      tile_set_60: -1485343505
-      tile_set_61: -1219334564
       tile_set_62: -367435358
       tile_set_63: -715631924
       tile_set_64: -112762756
@@ -1515,12 +1519,8 @@ TextureImporter:
       tile_set_71: 1841211688
       tile_set_72: 1594810410
       tile_set_73: -275384163
-      tile_set_74: -1387921816
-      tile_set_75: 229808639
       tile_set_76: -822887534
       tile_set_77: 1767950217
-      tile_set_78: -1426922958
-      tile_set_79: 882164362
       tile_set_8: 381470719
       tile_set_80: 1118668121
       tile_set_81: 207307908
