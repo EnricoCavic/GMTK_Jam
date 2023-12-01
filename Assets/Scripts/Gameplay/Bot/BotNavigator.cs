@@ -44,7 +44,7 @@ namespace DPA.Gameplay
 
         void Start()
         {
-            groundBoxSize = new Vector2(hitBox.bounds.size.x * 0.9f, 0.02f);
+            groundBoxSize = new Vector2(hitBox.bounds.size.x * 0.9f, 0.01f);
 
             InitializeDefaultState(botWalk);
 

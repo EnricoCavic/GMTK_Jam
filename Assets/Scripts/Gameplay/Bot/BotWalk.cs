@@ -9,6 +9,7 @@ namespace DPA.Gameplay
         readonly BotNavigator bot;
         bool isNearWall;
         bool canJumpOver;
+        bool isGrounded;
 
         public BotWalk(BotNavigator _bot) => bot = _bot;
 
@@ -22,6 +23,7 @@ namespace DPA.Gameplay
         {
             isNearWall = bot.IsNearWall();
             canJumpOver = bot.CanJumpOverWall();
+            isGrounded = bot.IsGrounded();
 
             if (isNearWall && !canJumpOver)
                 bot.ChangeDirection();
@@ -30,10 +32,10 @@ namespace DPA.Gameplay
 
         public IState CheckTransitions()
         {
-            if((isNearWall || bot.IsNearHole()) && canJumpOver)
+            if((isNearWall || bot.IsNearHole()) && canJumpOver && isGrounded)
                 return bot.botJump;  
         
-            if(!bot.IsGrounded())
+            if(!isGrounded)
                 return bot.botFall;
             
             return this;

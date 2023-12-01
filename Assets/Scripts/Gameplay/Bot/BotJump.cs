@@ -22,8 +22,8 @@ namespace DPA.Gameplay
             if(bot.IsFalling)
                 return bot.botFall;
 
-            if(bot.IsGrounded())
-                return bot.botWalk;
+            // if(bot.IsGrounded())
+            //     return bot.botWalk;
 
             return this;
         }
