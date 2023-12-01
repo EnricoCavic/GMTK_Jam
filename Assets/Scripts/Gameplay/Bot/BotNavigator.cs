@@ -23,6 +23,7 @@ namespace DPA.Gameplay
         [SerializeField] LayerMask collisionMask;
 
         [Space, SerializeField] Vector2 frontBoxSize = new Vector2(0.02f, 0.6f);
+        Vector2 groundBoxSize;
         
         Vector2 topPosition;
         ResumePauseHandler pauseHandler;
@@ -43,6 +44,8 @@ namespace DPA.Gameplay
 
         void Start()
         {
+            groundBoxSize = new Vector2(hitBox.bounds.size.x, 0.02f);
+
             InitializeDefaultState(botWalk);
 
             pauseHandler = ResumePauseHandler.Instance;
@@ -76,8 +79,7 @@ namespace DPA.Gameplay
 
         public bool IsGrounded()
         {
-            Vector2 boxSize = new Vector2(0.6f, 0.02f);
-            var groundCheckTempHit = Physics2D.BoxCast(transform.position, boxSize, 0, Vector2.down, Mathf.Infinity, collisionMask);
+            var groundCheckTempHit = Physics2D.BoxCast(transform.position, groundBoxSize, 0, Vector2.down, Mathf.Infinity, collisionMask);
             Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
             if (groundCheckTempHit.collider == null) return false;
 
@@ -155,6 +157,13 @@ namespace DPA.Gameplay
 
             Gizmos.color = color;
             Gizmos.DrawCube(GetFrontPosition(), frontBoxSize);
+
+            color = Color.red;
+            if (IsGrounded())
+                color = Color.green;
+
+            Gizmos.color = color;
+            Gizmos.DrawCube(transform.position, groundBoxSize);
         }
     }
 

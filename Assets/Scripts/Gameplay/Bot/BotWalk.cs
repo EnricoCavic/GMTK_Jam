@@ -32,10 +32,10 @@ namespace DPA.Gameplay
         {
             if((isNearWall || bot.IsNearHole()) && canJumpOver)
                 return bot.botJump;  
-         
+        
             if(!bot.IsGrounded())
                 return bot.botFall;
-
+            
             return this;
         }
 
