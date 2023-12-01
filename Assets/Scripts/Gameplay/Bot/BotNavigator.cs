@@ -44,7 +44,7 @@ namespace DPA.Gameplay
 
         void Start()
         {
-            groundBoxSize = new Vector2(hitBox.bounds.size.x, 0.02f);
+            groundBoxSize = new Vector2(hitBox.bounds.size.x * 0.9f, 0.02f);
 
             InitializeDefaultState(botWalk);
 
@@ -80,9 +80,8 @@ namespace DPA.Gameplay
         public bool IsGrounded()
         {
             var groundCheckTempHit = Physics2D.BoxCast(transform.position, groundBoxSize, 0, Vector2.down, Mathf.Infinity, collisionMask);
-            Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
+            //Debug.DrawRay(transform.position, Vector2.down * groundCheckTempHit.distance, Color.red);
             if (groundCheckTempHit.collider == null) return false;
-
             return groundCheckTempHit.distance < 0.01f;
         }
 
