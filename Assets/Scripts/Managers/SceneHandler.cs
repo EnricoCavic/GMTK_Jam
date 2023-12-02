@@ -1,13 +1,13 @@
-using DPA.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
 namespace DPA.Managers
 {
+    using Generic;
+
     public class SceneHandler : Singleton<SceneHandler>
     {
         [SerializeField] private AssetReference firstScene;

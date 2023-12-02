@@ -1,7 +1,8 @@
-using DPA.Generic;
 
 namespace DPA.Managers
 {
+    using Generic;
+    
     public class InputManager : Singleton<InputManager>
     {
         public PlayerActions actions;

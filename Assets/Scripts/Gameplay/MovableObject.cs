@@ -1,6 +1,4 @@
-using System;
 using DPA.Managers;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,7 +25,7 @@ public class MovableObject : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.bodyType = RigidbodyType2D.Static;
         resumePause = ResumePauseHandler.Instance;
-        resumePause.onResumed += ResumeObj;
+        resumePause.onResumed += DeselectObj;
     }
 
     private void Update()
@@ -39,23 +37,28 @@ public class MovableObject : MonoBehaviour
         rb.velocity = moveDirection * moveSpeed;
     }
 
+    // refatorar para usar o input system
     private void OnMouseDown()
     {
         if (!resumePause.isPaused) return;
+        SelectObj();
+    }
 
+    private void OnMouseUp()
+    {
+        if (!resumePause.isPaused) return;
+        DeselectObj();
+    }
+
+    private void SelectObj()
+    {
         clickOffset = (Vector2)transform.position - GetMousePosition();
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.bodyType = RigidbodyType2D.Dynamic;
         isSelected = true;
     }
 
-    private void OnMouseUp()
-    {
-        if (!resumePause.isPaused) return;
-        ResumeObj();
-    }
-
-    private void ResumeObj()
+    private void DeselectObj()
     {        
         if (!isSelected) return;
         rb.velocity = Vector2.zero;
@@ -76,7 +79,7 @@ public class MovableObject : MonoBehaviour
 
     private void OnDestroy()
     {
-        resumePause.onResumed -= ResumeObj;
+        resumePause.onResumed -= DeselectObj;
     }
 
 }

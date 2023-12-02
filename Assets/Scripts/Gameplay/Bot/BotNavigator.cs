@@ -29,7 +29,6 @@ namespace DPA.Gameplay
         public BotFall botFall;
 
         private Vector2 resumedVelocity;
-        public Vector2 currentBotVelocity;
 
         void Awake()
         {
@@ -54,7 +53,6 @@ namespace DPA.Gameplay
             if (pauseHandler.isPaused)
                 return;
 
-            currentBotVelocity = rb.velocity;
             Move(playerSpeed);
             topPosition = GetTopPosition();
             base.Update();
