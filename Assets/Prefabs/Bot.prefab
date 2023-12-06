@@ -82,12 +82,11 @@ MonoBehaviour:
   sideSwitch: 1
   playerSpeed: 4
   jumpForce: 12
-  fallGravityMultiplier: 5000
+  fallGravityMultiplier: 115
   collisionMask:
     serializedVersion: 2
     m_Bits: 1
   frontBoxSize: {x: 0.2, y: 0.4}
-  currentBotVelocity: {x: 0, y: 0}
 --- !u!70 &7295408015970128763
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
