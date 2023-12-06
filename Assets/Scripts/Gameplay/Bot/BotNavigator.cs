@@ -67,8 +67,9 @@ namespace DPA.Gameplay
         public bool CanJumpOverWall()
         {
             var topBlockHit = Physics2D.Raycast(topPosition, new Vector2(sideSwitch, 0), 1.25f, collisionMask);
-            Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), Color.red);
             return topBlockHit.collider == null;
+            // Color color = canJumpOver ? Color.green : Color.red; 
+            // Debug.DrawRay(topPosition, new Vector2(sideSwitch, 0), color);
         }
 
         public bool IsGrounded()
@@ -156,6 +157,14 @@ namespace DPA.Gameplay
 
             Gizmos.color = color;
             Gizmos.DrawCube(transform.position, groundBoxSize);
+
+            color = Color.red;
+            if(CanJumpOverWall())
+                color = Color.green;
+
+            Gizmos.DrawLine(GetTopPosition(), GetTopPosition() + new Vector2(sideSwitch, 0));
+
+
         }
     }
 

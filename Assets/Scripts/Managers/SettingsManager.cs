@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace DPA.Managers
@@ -8,16 +6,18 @@ namespace DPA.Managers
     {
         [SerializeField] private int frameRate = 60;
 
-#if UNITY_EDITOR
         [SerializeField] private float timeScale = 1;
+
+#if UNITY_EDITOR
         private float lastFrametimeScale;
 #endif
+
         private void Awake()
         {
             Application.targetFrameRate = frameRate;
+            Time.timeScale = timeScale;
 
 #if UNITY_EDITOR
-            Time.timeScale = timeScale;
             lastFrametimeScale = timeScale;
 #endif
         }
