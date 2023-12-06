@@ -17370,6 +17370,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5024839221686477021}
     m_Modifications:
+    - target: {fileID: 1382002317054105854, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
+      propertyPath: fallGravityMultiplier
+      value: 6000
+      objectReference: {fileID: 0}
     - target: {fileID: 1805781774427361922, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
       propertyPath: m_Name
       value: Bot
