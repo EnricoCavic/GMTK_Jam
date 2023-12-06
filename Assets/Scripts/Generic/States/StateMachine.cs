@@ -21,7 +21,7 @@ namespace DPA.Generic
             CurrentState.Enter();
         }
 
-        public virtual void Update()
+        public virtual void FixedUpdate()
         {
             CurrentState.Tick();
             stateDecision = CurrentState.CheckTransitions();

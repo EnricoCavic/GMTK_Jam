@@ -48,14 +48,14 @@ namespace DPA.Gameplay
             pauseHandler.onResumed += ResumeBot;
         }
 
-        public override void Update()
+        public override void FixedUpdate()
         {
             if (pauseHandler.isPaused)
                 return;
 
             Move(playerSpeed);
             topPosition = GetTopPosition();
-            base.Update();
+            base.FixedUpdate();
         }
 
         #region Detection
@@ -111,7 +111,7 @@ namespace DPA.Gameplay
 
         public void ApplyGravityMultiplier(float _multiplier = 1f)
         {
-            rb.AddForce(fallGravityMultiplier * _multiplier * Time.deltaTime * Vector2.down, ForceMode2D.Force);
+            rb.AddForce(fallGravityMultiplier * _multiplier * Vector2.down, ForceMode2D.Force);
         }
 
         public void Jump() => Jump(jumpForce);

@@ -424,6 +424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   frameRate: 60
+  timeScale: 1
 --- !u!4 &596526428
 Transform:
   m_ObjectHideFlags: 0
