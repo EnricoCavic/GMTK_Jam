@@ -68,12 +68,8 @@ namespace DPA.Gameplay
         Vector2 frontPosition => hitBox.bounds.center + new Vector3(hitBox.bounds.extents.x * sideSwitch, 0);
         public bool IsFalling => rb.velocity.y < 0.1f;
 
-        public Vector2 FrontBoxSize { get => FrontBoxSize1; set => FrontBoxSize1 = value; }
-        public Vector2 FrontBoxSize1 { get => frontBoxSize; set => frontBoxSize = value; }
-
         public bool CanJumpOverWall()
         {
-            //var topBlockHit = Physics2D.Raycast(TopPosition, new Vector2(sideSwitch, 0), 1f, collisionMask);
             var topBlockHit = Physics2D.BoxCast(new Vector2(jumpOverOff.x * sideSwitch, jumpOverOff.y) + topPosition, jumpOverBoxSize, 0f, Vector2.right * sideSwitch, 0f, collisionMask);
             return topBlockHit.collider == null;
         }
@@ -87,7 +83,7 @@ namespace DPA.Gameplay
 
         public bool IsNearWall()
         {  
-            return Physics2D.BoxCast(frontPosition, FrontBoxSize, 0, transform.right * sideSwitch, 0f, collisionMask).collider != null;
+            return Physics2D.BoxCast(frontPosition, frontBoxSize, 0, transform.right * sideSwitch, 0f, collisionMask).collider != null;
         }
 
         public bool IsNearHole()
@@ -155,7 +151,7 @@ namespace DPA.Gameplay
                 color = Color.green;
 
             Gizmos.color = color;
-            Gizmos.DrawCube(frontPosition, FrontBoxSize);
+            Gizmos.DrawCube(frontPosition, frontBoxSize);
 
             color = Color.red;
             if (IsGrounded())
@@ -169,7 +165,6 @@ namespace DPA.Gameplay
                 color = Color.green;
 
             Gizmos.color = color;
-            //Gizmos.DrawLine(TopPosition, TopPosition + new Vector2(sideSwitch * 1f, 0));
             Gizmos.DrawCube(new Vector2(jumpOverOff.x * sideSwitch, jumpOverOff.y) + topPosition, jumpOverBoxSize);
 
         }
