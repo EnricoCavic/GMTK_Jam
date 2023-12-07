@@ -82,7 +82,7 @@ MonoBehaviour:
   sideSwitch: 1
   playerSpeed: 4
   jumpForce: 12
-  fallGravityMultiplier: 115
+  fallGravityMultiplier: 120
   collisionMask:
     serializedVersion: 2
     m_Bits: 1
