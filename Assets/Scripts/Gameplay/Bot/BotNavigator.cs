@@ -34,7 +34,8 @@ namespace DPA.Gameplay
         public BotJump botJump;
         public BotFall botFall;
 
-        private Vector2 resumedVelocity;
+        Vector2 resumedVelocity;
+        Vector2 currentFramteTopPosition;
 
         void Awake()
         {
@@ -57,21 +58,21 @@ namespace DPA.Gameplay
             if (pauseHandler.isPaused)
                 return;
 
+            currentFramteTopPosition = GetTopPosition();
             Move(playerSpeed);
-            //topPosition = GetTopPosition();
             base.FixedUpdate();
         }
 
         #region Detection
 
-        Vector2 topPosition => transform.position + new Vector3(0f, hitBox.bounds.extents.y * 2.5f);
-        Vector2 frontPosition => hitBox.bounds.center + new Vector3(hitBox.bounds.extents.x * sideSwitch, 0);
+        Vector2 GetTopPosition() => transform.position + new Vector3(0f, hitBox.bounds.extents.y * 2.5f);
+        Vector2 GetFrontPosition() => hitBox.bounds.center + new Vector3(hitBox.bounds.extents.x * sideSwitch, 0);
         public bool IsFalling => rb.velocity.y < 0.1f;
 
         public bool CanJumpOverWall()
         {
             return Physics2D.BoxCast(
-                new Vector2(jumpOverPosition.x * sideSwitch, jumpOverPosition.y) + topPosition,
+                new Vector2(jumpOverPosition.x * sideSwitch, jumpOverPosition.y) + currentFramteTopPosition,
                 jumpOverBoxSize,
                 0f,
                 Vector2.right * sideSwitch,
@@ -89,12 +90,12 @@ namespace DPA.Gameplay
 
         public bool IsNearWall()
         {  
-            return Physics2D.BoxCast(frontPosition, frontBoxSize, 0f, transform.right * sideSwitch, 0f, collisionMask).collider != null;
+            return Physics2D.BoxCast(GetFrontPosition(), frontBoxSize, 0f, transform.right * sideSwitch, 0f, collisionMask).collider != null;
         }
 
         public bool IsNearHole()
         {
-            return Physics2D.Raycast(topPosition, HoleCheckDir.normalized, holeCheckDistance, collisionMask).collider == null;
+            return Physics2D.Raycast(currentFramteTopPosition, HoleCheckDir.normalized, holeCheckDistance, collisionMask).collider == null;
         }
 
         #endregion
@@ -150,12 +151,14 @@ namespace DPA.Gameplay
 
         private void OnDrawGizmos()
         {
+            var topPosition = GetTopPosition();
+
             Color color = Color.red;
             if (IsNearWall())
                 color = Color.green;
 
             Gizmos.color = color;
-            Gizmos.DrawCube(frontPosition, frontBoxSize);
+            Gizmos.DrawCube(GetFrontPosition(), frontBoxSize);
 
             color = Color.red;
             if (IsGrounded())
