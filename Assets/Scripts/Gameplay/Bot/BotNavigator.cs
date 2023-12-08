@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace DPA.Gameplay
 {
+    using System;
     using Generic;
     using Managers;
 
@@ -35,7 +36,7 @@ namespace DPA.Gameplay
         public BotFall botFall;
 
         Vector2 resumedVelocity;
-        Vector2 currentFramteTopPosition;
+        Vector2 currentFrameTopPosition;
 
         void Awake()
         {
@@ -58,7 +59,7 @@ namespace DPA.Gameplay
             if (pauseHandler.isPaused)
                 return;
 
-            currentFramteTopPosition = GetTopPosition();
+            currentFrameTopPosition = GetTopPosition();
             Move(playerSpeed);
             base.FixedUpdate();
         }
@@ -72,7 +73,7 @@ namespace DPA.Gameplay
         public bool CanJumpOverWall()
         {
             return Physics2D.BoxCast(
-                new Vector2(jumpOverPosition.x * sideSwitch, jumpOverPosition.y) + currentFramteTopPosition,
+                new Vector2(jumpOverPosition.x * sideSwitch, jumpOverPosition.y) + currentFrameTopPosition,
                 jumpOverBoxSize,
                 0f,
                 Vector2.right * sideSwitch,
@@ -95,7 +96,7 @@ namespace DPA.Gameplay
 
         public bool IsNearHole()
         {
-            return Physics2D.Raycast(currentFramteTopPosition, HoleCheckDir.normalized, holeCheckDistance, collisionMask).collider == null;
+            return Physics2D.Raycast(currentFrameTopPosition, HoleCheckDir.normalized, holeCheckDistance, collisionMask).collider == null;
         }
 
         #endregion
@@ -180,7 +181,6 @@ namespace DPA.Gameplay
 
             Gizmos.color = color;
             Gizmos.DrawLine(topPosition, HoleCheckDir.normalized * holeCheckDistance + topPosition);
-
         }
     }
 
