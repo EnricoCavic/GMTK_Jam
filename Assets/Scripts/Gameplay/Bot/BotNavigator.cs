@@ -36,7 +36,17 @@ namespace DPA.Gameplay
         public BotFall botFall;
 
         Vector2 resumedVelocity;
-        Vector2 currentFrameTopPosition;
+        Vector2 currentFrameTopPosition = Vector2.zero;
+        Vector2 topPosition
+        {
+            get
+            {
+                if(currentFrameTopPosition == Vector2.zero)
+                    return GetTopPosition();
+                else
+                    return currentFrameTopPosition;
+            }
+        }
 
         void Awake()
         {
@@ -73,7 +83,7 @@ namespace DPA.Gameplay
         public bool CanJumpOverWall()
         {
             return Physics2D.BoxCast(
-                new Vector2(jumpOverPosition.x * sideSwitch, jumpOverPosition.y) + currentFrameTopPosition,
+                new Vector2(jumpOverPosition.x * sideSwitch, jumpOverPosition.y) + topPosition,
                 jumpOverBoxSize,
                 0f,
                 Vector2.right * sideSwitch,
@@ -96,7 +106,7 @@ namespace DPA.Gameplay
 
         public bool IsNearHole()
         {
-            return Physics2D.Raycast(currentFrameTopPosition, HoleCheckDir.normalized, holeCheckDistance, collisionMask).collider == null;
+            return Physics2D.Raycast(topPosition, HoleCheckDir.normalized, holeCheckDistance, collisionMask).collider == null;
         }
 
         #endregion
@@ -152,8 +162,6 @@ namespace DPA.Gameplay
 
         private void OnDrawGizmos()
         {
-            var topPosition = GetTopPosition();
-
             Color color = Color.red;
             if (IsNearWall())
                 color = Color.green;

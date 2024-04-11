@@ -8482,28 +8482,8 @@ PrefabInstance:
     m_TransformParent: {fileID: 5024839221686477021}
     m_Modifications:
     - target: {fileID: 1382002317054105854, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
-      propertyPath: sideSwitch
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1382002317054105854, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
       propertyPath: jumpOverOff.x
       value: 0.24
-      objectReference: {fileID: 0}
-    - target: {fileID: 1382002317054105854, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
-      propertyPath: holeCheckDistance
-      value: 1.55
-      objectReference: {fileID: 0}
-    - target: {fileID: 1382002317054105854, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
-      propertyPath: holeCheckDirection
-      value: -3.17
-      objectReference: {fileID: 0}
-    - target: {fileID: 1382002317054105854, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
-      propertyPath: holeCheckDirection.y
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1382002317054105854, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
-      propertyPath: fallGravityMultiplier
-      value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 1805781774427361922, guid: 43ad8ae32b6bbcf41b0c9c10f625aaba, type: 3}
       propertyPath: m_Name
